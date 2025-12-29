@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Biemme 2 - Servizi</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2740d",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#181411",
+                        "surface-dark": "#221810",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden">
+<div class="relative flex min-h-screen w-full flex-col">
+<!-- Navigation -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-[#393028] bg-[#181411]/90 backdrop-blur-md px-10 py-4">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-primary">
+<span class="material-symbols-outlined !text-[32px]">engineering</span>
+</div>
+<h2 class="text-white text-xl font-bold leading-tight tracking-tight uppercase">Biemme 2</h2>
+</div>
+<div class="hidden lg:flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-white/80 hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Home</a>
+<a class="text-white text-sm font-bold leading-normal border-b-2 border-primary" href="#">Servizi</a>
+<a class="text-white/80 hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Progetti</a>
+<a class="text-white/80 hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Contatti</a>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-primary hover:bg-orange-600 transition-colors text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Richiedi Preventivo</span>
+</button>
+</div>
+<div class="lg:hidden text-white">
+<span class="material-symbols-outlined">menu</span>
+</div>
+</header>
+<!-- Hero Section -->
+<div class="relative flex flex-col items-center justify-center min-h-[60vh] p-4 text-center bg-cover bg-center" data-alt="Dark texture of concrete and steel beams close up" style='background-image: linear-gradient(rgba(24, 20, 17, 0.8), rgba(24, 20, 17, 0.9)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuC8px7KDBpmSkFOaQ-U51QbOzDcao8apXYm59j7J-URvF1RzHAEm7rpt70RPrMhAyOoZjo2uwPbii7xCiGS7EJRpaxDo636htuXD4jFNANvMt6wt-2jnt_qiu9CVazrNRK5n74bDwIJQtdj9rIrsjLXiNo-ceOoPTsxERut2RKDiGZr6BCvYX7OtGr5ulcuX7SJw8Z8yXh_mrwIBoyHXmIyE-EFy409PfDZ-4eCZNq2kIz2WoePQxylOsdwTzAX9QsS8ZPRXL48pMs");'>
+<div class="max-w-4xl flex flex-col gap-6 animate-fade-in-up">
+<span class="text-primary font-bold tracking-widest uppercase text-sm">Esperienza e Solidità</span>
+<h1 class="text-white text-5xl md:text-7xl font-black leading-tight tracking-[-0.02em] uppercase">
+                    Le Nostre <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">Specializzazioni</span>
+</h1>
+<h2 class="text-gray-300 text-lg md:text-xl font-normal max-w-2xl mx-auto leading-relaxed">
+                    Eccellenza tecnica e potenza operativa per ogni cantiere. Costruiamo infrastrutture solide per un futuro durevole.
+                </h2>
+<div class="mt-4">
+<span class="material-symbols-outlined text-primary animate-bounce">keyboard_arrow_down</span>
+</div>
+</div>
+</div>
+<!-- Main Content Container -->
+<main class="flex flex-col w-full max-w-[1280px] mx-auto px-4 md:px-10 py-16 gap-24">
+<!-- Service 1: Edilizia Residenziale -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="relative group overflow-hidden rounded-xl aspect-[4/3] order-2 lg:order-1">
+<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors z-10"></div>
+<div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Modern residential building under construction with scaffolding" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC8ZI4vVh5nZSA7VmdZUgbdoaici7YM82qVBQwcmIgH8phZg6Z8HzjSQavoqVhpWXt1DNuuuMooq2PXUAOGtjaEh2AJcZQ-ybdQZe6Xgj-4H42e9N6ctXnlAyCo3tdA7NJUv7nRWDuAIWiM5RijUSbVSSwlGYl5dR-FlmHSpeKtx3FPqQapSkiu7J3_zHImulSB1w8OkLeMlFGaQQXtU0OVZsQTmCaHMS8g1ptVbpVBA8wTU9_SuZAJ8NjdQ9t6jp00Km4YaDXby3I");'>
+</div>
+</div>
+<div class="flex flex-col gap-6 order-1 lg:order-2">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined">home_work</span>
+<span class="font-bold uppercase tracking-wider text-sm">Servizio 01</span>
+</div>
+<h3 class="text-4xl md:text-5xl font-bold text-white leading-tight">Edilizia Residenziale</h3>
+<p class="text-gray-400 text-lg leading-relaxed border-l-2 border-primary/30 pl-6">
+                        Dalla progettazione alla consegna chiavi in mano. Realizziamo complessi residenziali moderni con un focus assoluto su efficienza energetica, materiali premium e design sostenibile.
+                    </p>
+<ul class="flex flex-col gap-3 mt-2">
+<li class="flex items-center gap-3 text-gray-300">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span>Certificazioni energetiche Classe A</span>
+</li>
+<li class="flex items-center gap-3 text-gray-300">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span>Finiture di alto pregio</span>
+</li>
+<li class="flex items-center gap-3 text-gray-300">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span>Gestione completa del cantiere</span>
+</li>
+</ul>
+</div>
+</section>
+<!-- Service 2: Edilizia Industriale -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="flex flex-col gap-6 order-1">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined">factory</span>
+<span class="font-bold uppercase tracking-wider text-sm">Servizio 02</span>
+</div>
+<h3 class="text-4xl md:text-5xl font-bold text-white leading-tight">Edilizia Industriale</h3>
+<p class="text-gray-400 text-lg leading-relaxed border-l-2 border-primary/30 pl-6">
+                        Strutture in acciaio, capannoni logistici e impianti produttivi. Garantiamo rapidità di esecuzione e massima affidabilità strutturale per supportare la crescita del tuo business.
+                    </p>
+<div class="grid grid-cols-2 gap-4 mt-4">
+<div class="bg-surface-dark p-4 rounded-lg border border-[#393028]">
+<span class="text-3xl font-bold text-white block mb-1">Large Scale</span>
+<span class="text-gray-500 text-sm">Grandi opere</span>
+</div>
+<div class="bg-surface-dark p-4 rounded-lg border border-[#393028]">
+<span class="text-3xl font-bold text-white block mb-1">Steel</span>
+<span class="text-gray-500 text-sm">Strutture metalliche</span>
+</div>
+</div>
+</div>
+<div class="relative group overflow-hidden rounded-xl aspect-[4/3] order-2">
+<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors z-10"></div>
+<div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Large steel warehouse framework structure against blue sky" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD9TUJl2WdNIwX3pLwnVC1IdoGnYr2ITAVg8IICLqHzXhkfif0l88TDowmnjBTYM1mqrIXeabNhf_GOuLAKRwRYN1MU121h91LF0mLm61DvjjDSjfGEsy5zg8yIlfw8OBO5VxuygfO-bGgrEHNx5P1fJaxL-MQPdXNbbrrb4fdvZdLKR3HFp17M9I6IginDvqZRhkh4ctDQvna_y91Xyx6NMBnFhjFn8XwT2ZxGyCn0CBqR5IkJ9VsV9R60QBMNx58R1IckzWMwme0");'>
+</div>
+</div>
+</section>
+<!-- Service 3: Scavi e Movimento Terra -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="relative group overflow-hidden rounded-xl aspect-[4/3] order-2 lg:order-1">
+<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors z-10"></div>
+<div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Yellow excavator digging earth on a construction site with dust" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCBkJSMkR-pySnEE8zCX862aFQazNvzHI3Lv3e-o_vc74uaSLhVCK8kOElbxgS4PxP71D6qUK4Az-_Pfr-IRZq_35C_u5RWK2OwSamXAArbom_rqNagZV_5Axk0ZD2u2K2FZGKrGUqFHzqBDi5d5-fvYBy54IehtBbnkeWChePT0gNv0LYamegRqqAgYZ0vgg4v-9H4Zo03_G0f_SvBgvwmS_pMS9luX6f7EWli96u45FpHLij6QUKjwn53pgDLZPw9JYtI0LQjW38");'>
+</div>
+</div>
+<div class="flex flex-col gap-6 order-1 lg:order-2">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined">landscape</span>
+<span class="font-bold uppercase tracking-wider text-sm">Servizio 03</span>
+</div>
+<h3 class="text-4xl md:text-5xl font-bold text-white leading-tight">Scavi e Movimento Terra</h3>
+<p class="text-gray-400 text-lg leading-relaxed border-l-2 border-primary/30 pl-6">
+                        Preparazione del terreno, sbancamenti e fondazioni. Il nostro parco macchine avanzato ci permette di operare su qualsiasi terreno con precisione millimetrica e in totale sicurezza.
+                    </p>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="px-3 py-1 bg-surface-dark rounded border border-[#393028] text-sm text-gray-300">Demolizioni</span>
+<span class="px-3 py-1 bg-surface-dark rounded border border-[#393028] text-sm text-gray-300">Scavi di fondazione</span>
+<span class="px-3 py-1 bg-surface-dark rounded border border-[#393028] text-sm text-gray-300">Livellamento</span>
+<span class="px-3 py-1 bg-surface-dark rounded border border-[#393028] text-sm text-gray-300">Trasporto inerti</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Machinery List Section -->
+<section class="w-full bg-[#1e1a16] py-20 border-y border-[#393028]">
+<div class="max-w-[1280px] mx-auto px-4 md:px-10">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+<div>
+<h2 class="text-3xl md:text-4xl font-bold text-white uppercase tracking-tight mb-2">Il Nostro Parco Macchine</h2>
+<p class="text-gray-400 max-w-lg">Tecnologia all'avanguardia per garantire efficienza e sicurezza in ogni fase del progetto.</p>
+</div>
+<a class="text-primary font-bold flex items-center gap-2 hover:underline" href="#">
+                        Scarica Brochure Completa <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Machine Item 1 -->
+<div class="bg-[#2a241e] p-6 rounded-lg border border-[#393028] hover:border-primary/50 transition-colors group">
+<div class="size-12 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">agriculture</span>
+</div>
+<h4 class="text-white text-xl font-bold mb-2">Escavatori Cingolati</h4>
+<p class="text-sm text-gray-400">Dai 15 ai 300 quintali per ogni tipo di scavo.</p>
+</div>
+<!-- Machine Item 2 -->
+<div class="bg-[#2a241e] p-6 rounded-lg border border-[#393028] hover:border-primary/50 transition-colors group">
+<div class="size-12 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<h4 class="text-white text-xl font-bold mb-2">Autocarri Pesanti</h4>
+<p class="text-sm text-gray-400">Flotta 4 assi e bilici per trasporto materiali.</p>
+</div>
+<!-- Machine Item 3 -->
+<div class="bg-[#2a241e] p-6 rounded-lg border border-[#393028] hover:border-primary/50 transition-colors group">
+<div class="size-12 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">construction</span>
+</div>
+<h4 class="text-white text-xl font-bold mb-2">Gru a Torre</h4>
+<p class="text-sm text-gray-400">Sollevamento carichi pesanti ad alte quote.</p>
+</div>
+<!-- Machine Item 4 -->
+<div class="bg-[#2a241e] p-6 rounded-lg border border-[#393028] hover:border-primary/50 transition-colors group">
+<div class="size-12 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">handyman</span>
+</div>
+<h4 class="text-white text-xl font-bold mb-2">Pale Gommate</h4>
+<p class="text-sm text-gray-400">Movimentazione terra rapida e versatile.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-24 px-4 bg-[#181411] relative overflow-hidden">
+<!-- Decorative background elements -->
+<div class="absolute top-0 right-0 w-1/3 h-full bg-primary/5 skew-x-12"></div>
+<div class="relative max-w-4xl mx-auto text-center flex flex-col items-center gap-8">
+<span class="material-symbols-outlined text-6xl text-primary/50">architecture</span>
+<h2 class="text-4xl md:text-5xl font-black text-white uppercase leading-none tracking-tight">
+                    Pronto a Costruire il Futuro?
+                </h2>
+<p class="text-xl text-gray-400 max-w-2xl">
+                    Contattaci oggi per una consulenza tecnica gratuita o per richiedere un preventivo personalizzato per il tuo prossimo cantiere.
+                </p>
+<button class="group flex items-center justify-center gap-3 bg-primary hover:bg-white hover:text-primary text-white text-lg font-bold py-4 px-10 rounded-lg transition-all duration-300 shadow-[0_0_20px_rgba(242,116,13,0.3)] hover:shadow-[0_0_30px_rgba(242,116,13,0.6)]">
+<span>Richiedi Preventivo per un Progetto</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-[#0f0c0a] border-t border-[#393028] pt-16 pb-8">
+<div class="max-w-[1280px] mx-auto px-4 md:px-10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+<div class="col-span-1 md:col-span-2">
+<div class="flex items-center gap-3 text-white mb-6">
+<span class="material-symbols-outlined text-primary text-2xl">engineering</span>
+<span class="text-xl font-bold uppercase">Biemme 2</span>
+</div>
+<p class="text-gray-500 max-w-sm mb-6">
+                            Leader nel settore delle costruzioni dal 1998. Qualità, sicurezza e innovazione sono le fondamenta del nostro lavoro quotidiano.
+                        </p>
+<div class="flex gap-4">
+<a class="size-10 rounded bg-[#2a241e] flex items-center justify-center text-white hover:bg-primary transition-colors" href="#">
+<svg aria-hidden="true" class="size-5" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" fill-rule="evenodd"></path></svg>
+</a>
+<a class="size-10 rounded bg-[#2a241e] flex items-center justify-center text-white hover:bg-primary transition-colors" href="#">
+<svg aria-hidden="true" class="size-5" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772 4.902 4.902 0 011.772-1.153c.636-.247 1.363-.416 2.427-.465C9.673 2.013 10.03 2 12.48 2h-.165zm-3.77 14.762a6.762 6.762 0 100-13.524 6.762 6.762 0 000 13.524zM12 11.274a5.454 5.454 0 115.454-5.455 5.454 5.454 0 01-5.454 5.455zM21.9 6.1a1.565 1.565 0 110-3.13 1.565 1.565 0 010 3.13z" fill-rule="evenodd"></path></svg>
+</a>
+</div>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Navigazione</h4>
+<ul class="flex flex-col gap-3 text-gray-500">
+<li><a class="hover:text-primary transition-colors" href="#">Home</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Chi Siamo</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Servizi</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Progetti</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Certificazioni</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Contatti</h4>
+<ul class="flex flex-col gap-3 text-gray-500">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-sm mt-1">location_on</span>
+<span>Via dell'Industria, 45<br/>20100 Milano (MI)</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">call</span>
+<span>+39 02 1234 5678</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">mail</span>
+<span>info@biemme2.it</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="border-t border-[#393028] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-gray-600 text-sm">© 2024 Biemme 2 Costruzioni S.r.l. - P.IVA 01234567890</p>
+<div class="flex gap-6 text-sm text-gray-600">
+<a class="hover:text-white" href="#">Privacy Policy</a>
+<a class="hover:text-white" href="#">Cookie Policy</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

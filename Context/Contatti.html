@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Biemme 2 - Contatti</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#f2740d",
+              "primary-hover": "#d96400",
+              "background-light": "#f8f7f5",
+              "background-dark": "#181411",
+              "background-card-dark": "#221d19",
+              "text-muted": "#baa99c",
+              "border-dark": "#393028"
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"]
+            },
+            backgroundImage: {
+               'gradient-dark': 'linear-gradient(to bottom right, #181411, #221810)',
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white overflow-x-hidden min-h-screen flex flex-col">
+<!-- Navbar -->
+<header class="sticky top-0 z-50 w-full border-b border-border-dark bg-background-dark/95 backdrop-blur-md">
+<div class="px-4 md:px-10 py-3 flex items-center justify-between mx-auto max-w-7xl">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-white text-xl font-bold tracking-tight">Biemme 2</h2>
+</div>
+<div class="hidden lg:flex items-center gap-8">
+<nav class="flex items-center gap-6">
+<a class="text-text-muted hover:text-primary transition-colors text-sm font-medium" href="#">Home</a>
+<a class="text-text-muted hover:text-primary transition-colors text-sm font-medium" href="#">Progetti</a>
+<a class="text-text-muted hover:text-primary transition-colors text-sm font-medium" href="#">Chi Siamo</a>
+<a class="text-text-muted hover:text-primary transition-colors text-sm font-medium" href="#">Servizi</a>
+<a class="text-primary text-sm font-medium" href="#">Contatti</a>
+</nav>
+<button class="bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-lg text-sm font-bold tracking-wide transition-all shadow-lg shadow-primary/20">
+                    Richiedi Preventivo
+                </button>
+</div>
+<!-- Mobile Menu Icon -->
+<button class="lg:hidden text-white p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="flex-grow flex flex-col w-full mx-auto max-w-7xl px-4 md:px-10 py-8 md:py-16">
+<!-- Main Split Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20">
+<!-- Left Column: Contact Info -->
+<div class="flex flex-col gap-10">
+<div class="space-y-4">
+<span class="text-primary font-bold text-sm tracking-widest uppercase">Parla con noi</span>
+<h1 class="text-5xl md:text-6xl font-bold tracking-tighter text-white leading-[1.1]">
+                        Hai un progetto?<br/>
+<span class="text-text-muted">Costruiamolo insieme.</span>
+</h1>
+<p class="text-lg text-text-muted max-w-md leading-relaxed mt-4">
+                        Dal concept iniziale alla posa finale, siamo il partner ideale per trasformare le tue idee in realtà solide e durevoli.
+                    </p>
+</div>
+<div class="space-y-8 mt-4">
+<!-- Address Item -->
+<div class="flex items-start gap-5 group">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined text-2xl">location_on</span>
+</div>
+<div>
+<h3 class="text-white text-lg font-bold mb-1">Sede Principale</h3>
+<p class="text-text-muted leading-relaxed">Via Roma 123,<br/>20121 Milano, Italia</p>
+</div>
+</div>
+<!-- Phone Item -->
+<div class="flex items-start gap-5 group">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined text-2xl">call</span>
+</div>
+<div>
+<h3 class="text-white text-lg font-bold mb-1">Telefono</h3>
+<a class="text-text-muted hover:text-white transition-colors block text-lg font-medium" href="tel:+390212345678">+39 02 1234 5678</a>
+<p class="text-sm text-text-muted/60 mt-1">Lun-Ven, 9:00 - 18:00</p>
+</div>
+</div>
+<!-- Email Item -->
+<div class="flex items-start gap-5 group">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined text-2xl">mail</span>
+</div>
+<div>
+<h3 class="text-white text-lg font-bold mb-1">Email</h3>
+<a class="text-text-muted hover:text-white transition-colors block text-lg font-medium" href="mailto:info@biemme2.it">info@biemme2.it</a>
+<a class="text-text-muted hover:text-white transition-colors block text-sm mt-1" href="mailto:support@biemme2.it">support@biemme2.it</a>
+</div>
+</div>
+</div>
+<!-- Social Icons -->
+<div class="mt-auto pt-8 border-t border-border-dark">
+<p class="text-sm font-medium text-text-muted mb-4 uppercase tracking-wider">Seguici su</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-background-card-dark border border-border-dark flex items-center justify-center text-text-muted hover:border-primary hover:text-primary transition-all duration-300" href="#">
+<!-- Instagram SVG placeholder using material symbol for simplicity in this context, or custom svg -->
+<span class="text-xl font-bold">Ig</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-background-card-dark border border-border-dark flex items-center justify-center text-text-muted hover:border-primary hover:text-primary transition-all duration-300" href="#">
+<span class="text-xl font-bold">Fb</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-background-card-dark border border-border-dark flex items-center justify-center text-text-muted hover:border-primary hover:text-primary transition-all duration-300" href="#">
+<span class="text-xl font-bold">In</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Right Column: Form -->
+<div class="bg-background-card-dark rounded-2xl border border-border-dark p-6 md:p-8 lg:p-10 shadow-2xl relative overflow-hidden">
+<!-- Decorative background accent -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[80px] rounded-full pointer-events-none"></div>
+<h3 class="text-2xl font-bold text-white mb-6">Inviaci un messaggio</h3>
+<form action="#" class="space-y-5">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div class="space-y-2">
+<label class="text-sm font-medium text-text-muted ml-1" for="name">Nome Completo</label>
+<input class="w-full bg-[#2a241f] border border-border-dark rounded-lg px-4 py-3.5 text-white placeholder-text-muted/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" id="name" placeholder="Mario Rossi" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-medium text-text-muted ml-1" for="phone">Telefono</label>
+<input class="w-full bg-[#2a241f] border border-border-dark rounded-lg px-4 py-3.5 text-white placeholder-text-muted/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" id="phone" placeholder="+39 333 ..." type="tel"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-medium text-text-muted ml-1" for="email">Email</label>
+<input class="w-full bg-[#2a241f] border border-border-dark rounded-lg px-4 py-3.5 text-white placeholder-text-muted/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" id="email" placeholder="mario@esempio.it" type="email"/>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-medium text-text-muted ml-1" for="service">Tipo di Lavoro</label>
+<div class="relative">
+<select class="w-full bg-[#2a241f] border border-border-dark rounded-lg px-4 py-3.5 text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none appearance-none transition-all cursor-pointer" id="service">
+<option disabled="" selected="" value="">Seleziona un servizio</option>
+<option value="ristrutturazione">Ristrutturazione Completa</option>
+<option value="nuova-costruzione">Nuova Costruzione</option>
+<option value="impiantistica">Impiantistica</option>
+<option value="consulenza">Consulenza Tecnica</option>
+<option value="altro">Altro</option>
+</select>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-medium text-text-muted ml-1" for="message">Messaggio</label>
+<textarea class="w-full bg-[#2a241f] border border-border-dark rounded-lg px-4 py-3.5 text-white placeholder-text-muted/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none transition-all" id="message" placeholder="Descrivi brevemente il tuo progetto..." rows="4"></textarea>
+</div>
+<div class="pt-2">
+<button class="w-full bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-lg shadow-lg shadow-primary/20 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 group" type="button">
+                            INVIA RICHIESTA
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Full Width Map Section -->
+<div class="mt-20 w-full rounded-2xl overflow-hidden border border-border-dark relative h-[450px] bg-[#221d19]">
+<!-- Map Placeholder Image -->
+<img alt="Map of Milan" class="w-full h-full object-cover opacity-60 grayscale invert-[.1]" data-alt="Dark stylized map of Milan city streets" data-location="Milan" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_eJQCBtYS6RM1_7XzlcYnFa4gxGmmbspIpl5ZCJFXTDyYoYPHfpwFQG_E3LWPfxs8imhrR8n62QJzBBTP2YmhwK5vem1SEZUNX0o8oyZcN18hb3AlEe3VvU9c8FOdgHk8WPGTeyoagruwMrSOSacK4YmSs7opmJZ9Dxiv5Nd-_LsZ7rcyBZCBRDIVdADNwWryRYqjXaupIpOYSP9nVFZ0mdp7VcyQsCCt1j3afdBkyZQ6Z4VDDGfktmAu1-IuCBzdgZpPi5Ov1fo"/>
+<!-- Custom Map Marker Overlay -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="relative flex items-center justify-center">
+<div class="absolute w-12 h-12 bg-primary rounded-full animate-ping opacity-75"></div>
+<div class="relative w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl border-4 border-background-dark z-10 text-white">
+<span class="material-symbols-outlined">apartment</span>
+</div>
+<div class="absolute top-full mt-3 bg-background-dark/90 backdrop-blur px-4 py-2 rounded-lg border border-border-dark shadow-xl text-center min-w-[150px]">
+<p class="text-white font-bold text-sm">Biemme 2 HQ</p>
+<p class="text-xs text-text-muted">Milano, Italia</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Variant 2 -->
+<footer class="bg-[#110e0c] border-t border-border-dark pt-16 pb-8">
+<div class="max-w-7xl mx-auto px-4 md:px-10">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-16">
+<!-- Brand Column -->
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-3 text-white">
+<div class="size-8 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-xl font-bold">Biemme 2</h2>
+</div>
+<p class="text-text-muted text-sm leading-relaxed max-w-xs">
+                        Costruiamo il futuro con solidità e innovazione. Leader nel settore edile per ristrutturazioni e nuove costruzioni a Milano e provincia.
+                    </p>
+</div>
+<!-- Links Column 1 -->
+<div>
+<h4 class="text-white font-bold mb-6">Navigazione</h4>
+<ul class="space-y-4">
+<li><a class="text-text-muted hover:text-primary text-sm transition-colors" href="#">Home</a></li>
+<li><a class="text-text-muted hover:text-primary text-sm transition-colors" href="#">Chi Siamo</a></li>
+<li><a class="text-text-muted hover:text-primary text-sm transition-colors" href="#">Progetti</a></li>
+<li><a class="text-text-muted hover:text-primary text-sm transition-colors" href="#">Carriere</a></li>
+</ul>
+</div>
+<!-- Links Column 2 -->
+<div>
+<h4 class="text-white font-bold mb-6">Servizi</h4>
+<ul class="space-y-4">
+<li><a class="text-text-muted hover:text-primary text-sm transition-colors" href="#">Ristrutturazioni</a></li>
+<li><a class="text-text-muted hover:text-primary text-sm transition-colors" href="#">Costruzioni Industriali</a></li>
+<li><a class="text-text-muted hover:text-primary text-sm transition-colors" href="#">Design d'Interni</a></li>
+<li><a class="text-text-muted hover:text-primary text-sm transition-colors" href="#">Manutenzione</a></li>
+</ul>
+</div>
+<!-- Newsletter Column -->
+<div>
+<h4 class="text-white font-bold mb-6">Resta Aggiornato</h4>
+<p class="text-text-muted text-xs mb-4">Ricevi le ultime novità sui nostri progetti.</p>
+<div class="flex gap-2">
+<input class="bg-[#221d19] border border-border-dark rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-primary w-full" placeholder="Email" type="email"/>
+<button class="bg-primary hover:bg-primary-hover text-white rounded-md px-3 py-2 transition-colors">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+<div class="border-t border-border-dark pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+<p class="text-text-muted text-xs">© 2023 Biemme 2 S.r.l. Tutti i diritti riservati.</p>
+<div class="flex gap-6">
+<a class="text-text-muted hover:text-white text-xs transition-colors" href="#">Privacy Policy</a>
+<a class="text-text-muted hover:text-white text-xs transition-colors" href="#">Termini di Servizio</a>
+<a class="text-text-muted hover:text-white text-xs transition-colors" href="#">Cookie Policy</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,49 @@
+{
+  "detectNewPayloadProject": {
+    "enabled": true,
+    "description": "Detect new Payload CMS projects and suggest setup",
+    "conditions": {
+      "fileExists": [
+        "payload.config.ts"
+      ],
+      "any": [
+        {
+          "fileNotExists": "payload.db"
+        },
+        {
+          "fileEmpty": "payload.db"
+        },
+        {
+          "directoryEmpty": "src/payload/collections"
+        }
+      ]
+    },
+    "action": {
+      "type": "suggest",
+      "skill": "cms-setup",
+      "message": "New Payload CMS project detected. Run /cms-setup to configure collections and seed initial data.",
+      "priority": "high"
+    }
+  },
+  "detectSchemaMigration": {
+    "enabled": true,
+    "description": "Detect schema changes requiring migration",
+    "conditions": {
+      "fileExists": [
+        "payload.config.ts",
+        "payload.db"
+      ],
+      "fileModified": {
+        "pattern": "src/payload/collections/*.ts",
+        "since": "lastSeed"
+      }
+    },
+    "action": {
+      "type": "suggest",
+      "skill": "cms-setup",
+      "args": "--action migrate",
+      "message": "Collection schemas have changed. Run /cms-setup --action migrate to update the database.",
+      "priority": "medium"
+    }
+  }
+}

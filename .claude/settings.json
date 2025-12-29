@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/hooks/eslint-validator.py"
+          },
+          {
+            "type": "command",
+            "command": "python .claude/hooks/prettier-format.py"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/hooks/pre-prompt.py"
+          }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "CLAUDE_PROJECT_DIR": "c:/VSC/Siti Web"
+  },
+  "includeCoAuthoredBy": true,
+  "statusLine": {
+    "type": "command",
+    "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/statusline.ps1",
+    "padding": 0
+  }
+}

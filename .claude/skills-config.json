@@ -1,0 +1,403 @@
+{
+  "version": "2.1",
+  "lastUpdated": "2025-12-24",
+  "orchestration": {
+    "enabled": true,
+    "mode": "auto",
+    "description": "Sistema di orchestrazione multi-agente. Ogni prompt viene analizzato, assegnato agli agenti appropriati, e validato."
+  },
+  "techStack": {
+    "react": "19.2",
+    "nextjs": "16",
+    "typescript": "5.9",
+    "tailwindcss": "4.0",
+    "payloadCms": "3.0",
+    "vitest": "4.0",
+    "motion": "12",
+    "storybook": "9",
+    "vite": "6"
+  },
+  "agents": {
+    "orchestrator": {
+      "role": "Coordinatore centrale che analizza prompt, seleziona agenti, e valida output",
+      "autoActivate": true
+    },
+    "frontend-developer": {
+      "role": "Sviluppo UI con React 19, Vue 3.5, TypeScript 5.9",
+      "triggers": ["sviluppa", "implementa", "crea.*pagina", "form", "layout"]
+    },
+    "nextjs-developer": {
+      "role": "App full-stack con Next.js 16, Server Components, Server Actions",
+      "triggers": ["nextjs", "next.js", "app router", "server action", "ssr", "ssg"]
+    },
+    "react-specialist": {
+      "role": "Pattern React 19 avanzati, hooks, state management",
+      "triggers": ["react", "hook", "state.*management", "zustand", "context"]
+    },
+    "ui-designer": {
+      "role": "Design system, Tailwind CSS 4, token design",
+      "triggers": ["design", "ui.*design", "visual", "color", "tema"]
+    },
+    "ux-researcher": {
+      "role": "Ricerca utente, usability testing, insights",
+      "triggers": ["ux.*research", "user.*research", "usability", "persona"]
+    },
+    "seo-specialist": {
+      "role": "SEO tecnico, Core Web Vitals, structured data",
+      "triggers": ["seo", "metadata", "sitemap", "structured.*data", "google"]
+    },
+    "web-debugger": {
+      "role": "Debug e fix di bug in React 19, Next.js 16, TypeScript",
+      "triggers": ["debug", "fix", "errore", "bug", "problema", "non.*funziona"]
+    },
+    "web-performance-optimizer": {
+      "role": "Ottimizzazione Core Web Vitals, bundle, loading",
+      "triggers": ["performance", "ottimizza", "velocità", "bundle.*size", "lighthouse"]
+    },
+    "ui-component-manager": {
+      "role": "Installazione componenti shadcn/ui, Aceternity, Magic UI",
+      "triggers": ["shadcn", "aceternity", "magic.*ui", "installa.*component"]
+    },
+    "test-generator": {
+      "role": "Generazione test con Vitest 4, Testing Library",
+      "triggers": ["test", "coverage", "vitest", "unit.*test"]
+    },
+    "a11y-auditor": {
+      "role": "Audit accessibilità WCAG 2.1 AA",
+      "triggers": ["accessibilit", "a11y", "wcag", "aria", "screen.*reader"]
+    },
+    "security-scanner": {
+      "role": "Scansione vulnerabilità sicurezza",
+      "triggers": ["security", "sicurezza", "vulnerabilit", "audit"]
+    },
+    "performance-auditor": {
+      "role": "Analisi performance e bottleneck",
+      "triggers": ["analisi.*performance", "bottleneck", "profiling"]
+    },
+    "code-quality": {
+      "role": "Qualità codice con ESLint 9, TypeScript 5.9",
+      "triggers": ["code.*quality", "lint", "refactor", "clean.*code"]
+    },
+    "release-manager": {
+      "role": "Gestione release NPM, versioning, changelog",
+      "triggers": ["release", "publish", "npm", "version", "changelog"]
+    },
+    "dependency-migrator": {
+      "role": "Upgrade sicuri dipendenze con migration plan",
+      "triggers": ["upgrade", "update", "migration", "dipendenze"]
+    },
+    "prompt-engineer": {
+      "role": "Ottimizzazione prompt per LLM",
+      "triggers": ["prompt", "llm", "ai.*prompt"]
+    },
+    "cms-setup-wizard": {
+      "role": "Setup guidato progetti Payload CMS 3.0",
+      "triggers": ["cms.*setup", "init.*cms", "payload.*init", "nuovo.*cms", "new.*cms"]
+    },
+    "cms-content-manager": {
+      "role": "Gestione contenuti CMS via Local API",
+      "triggers": ["import.*content", "export.*data", "seed.*database", "bulk.*update", "import.*csv"]
+    },
+    "cms-schema-designer": {
+      "role": "Design collections e schemi Payload CMS",
+      "triggers": ["create.*collection", "add.*field", "design.*schema", "cms.*schema", "new.*collection"]
+    }
+  },
+  "skills": {
+    "ui-component-builder": {
+      "triggers": ["crea.*component", "nuovo.*component", "compound.*component", "server.*component"],
+      "priority": "high"
+    },
+    "component-tester": {
+      "triggers": ["scrivi.*test", "test.*component", "coverage", "vitest"],
+      "priority": "high"
+    },
+    "component-documenter": {
+      "triggers": ["documentazione", "storybook", "readme", "api.*doc"],
+      "priority": "medium"
+    },
+    "design-system-manager": {
+      "triggers": ["design.*token", "theming", "tailwind.*config", "color.*palette"],
+      "priority": "medium"
+    },
+    "library-bundler": {
+      "triggers": ["build.*config", "bundle", "publish.*npm", "tsup"],
+      "priority": "medium"
+    },
+    "codebase-analyzer": {
+      "triggers": ["analizza", "code.*review", "duplicazion", "anti.*pattern"],
+      "priority": "high"
+    },
+    "nextjs-developer": {
+      "triggers": ["nextjs", "app.*router", "server.*action", "metadata"],
+      "priority": "high"
+    },
+    "react-specialist": {
+      "triggers": ["react.*19", "use.*api", "useOptimistic", "server.*component"],
+      "priority": "high"
+    },
+    "frontend-developer": {
+      "triggers": ["frontend", "ui", "responsive", "form"],
+      "priority": "high"
+    },
+    "seo-optimizer": {
+      "triggers": ["seo", "sitemap", "structured.*data", "core.*web.*vitals"],
+      "priority": "medium"
+    },
+    "web-debugger": {
+      "triggers": ["debug", "fix.*bug", "errore", "hydration"],
+      "priority": "high"
+    },
+    "performance-optimizer": {
+      "triggers": ["performance", "lighthouse", "bundle.*size", "ottimizza"],
+      "priority": "medium"
+    },
+    "ux-research": {
+      "triggers": ["ux.*research", "user.*interview", "usability.*test"],
+      "priority": "low"
+    },
+    "cms-setup": {
+      "triggers": ["cms.*setup", "init.*payload", "new.*cms"],
+      "priority": "high"
+    },
+    "cms-add-collection": {
+      "triggers": ["add.*collection", "create.*collection", "new.*collection"],
+      "priority": "high"
+    },
+    "cms-deploy": {
+      "triggers": ["deploy.*cms", "cms.*production", "cms.*vercel", "cms.*docker"],
+      "priority": "medium"
+    },
+    "cms-content": {
+      "triggers": ["import.*cms", "export.*cms", "seed.*cms", "bulk.*update"],
+      "priority": "medium"
+    }
+  },
+  "workflows": {
+    "new-component": {
+      "description": "Creazione componente completo con test e docs",
+      "agents": ["ui-designer", "frontend-developer", "test-generator", "a11y-auditor"],
+      "skills": ["ui-component-builder", "component-tester", "component-documenter"]
+    },
+    "debug-fix": {
+      "description": "Debug e fix di bug",
+      "agents": ["web-debugger", "test-generator", "code-quality"],
+      "skills": ["web-debugger", "component-tester"]
+    },
+    "performance-optimization": {
+      "description": "Ottimizzazione performance completa",
+      "agents": ["performance-auditor", "web-performance-optimizer", "seo-specialist"],
+      "skills": ["performance-optimizer", "seo-optimizer"]
+    },
+    "new-feature": {
+      "description": "Sviluppo nuova feature end-to-end",
+      "agents": ["ux-researcher", "ui-designer", "react-specialist", "frontend-developer", "test-generator", "a11y-auditor"]
+    },
+    "nextjs-app": {
+      "description": "Sviluppo app Next.js 16 completa",
+      "agents": ["nextjs-developer", "ui-component-manager", "frontend-developer", "seo-specialist", "test-generator"]
+    },
+    "pre-publish": {
+      "description": "Audit completo pre-pubblicazione NPM",
+      "agents": ["test-generator", "security-scanner", "a11y-auditor", "performance-auditor", "code-quality", "release-manager"]
+    },
+    "full-project": {
+      "description": "Setup progetto completo da zero",
+      "agents": ["ux-researcher", "ui-designer", "ui-component-manager", "nextjs-developer", "frontend-developer", "test-generator", "a11y-auditor", "security-scanner", "web-performance-optimizer", "seo-specialist", "release-manager"]
+    },
+    "auth-setup": {
+      "description": "Setup autenticazione completa con Better Auth",
+      "agents": ["nextjs-developer", "security-scanner", "frontend-developer"],
+      "docs": ["BETTER-AUTH.md", "SUPABASE.md"],
+      "steps": [
+        "Configurazione Better Auth server",
+        "Setup OAuth providers (Google, GitHub)",
+        "Database schema per auth",
+        "Componenti UI login/register",
+        "Middleware protezione route",
+        "Test autenticazione"
+      ]
+    },
+    "database-setup": {
+      "description": "Setup database con Supabase e Drizzle ORM",
+      "agents": ["nextjs-developer", "security-scanner"],
+      "docs": ["SUPABASE.md"],
+      "steps": [
+        "Configurazione Supabase client",
+        "Setup Drizzle ORM",
+        "Definizione schema tabelle",
+        "Configurazione RLS policies",
+        "Migration iniziale",
+        "Query patterns base"
+      ]
+    },
+    "stripe-integration": {
+      "description": "Integrazione pagamenti Stripe",
+      "agents": ["nextjs-developer", "security-scanner", "frontend-developer"],
+      "docs": ["STRIPE-SETUP.md", "BETTER-AUTH.md"],
+      "steps": [
+        "Setup API keys Stripe",
+        "Creazione prodotti/piani",
+        "Configurazione webhook",
+        "Checkout session",
+        "Customer portal",
+        "Gestione subscription"
+      ]
+    },
+    "deploy-coolify": {
+      "description": "Deploy su Coolify con Docker",
+      "agents": ["nextjs-developer", "security-scanner"],
+      "docs": ["COOLIFY.md"],
+      "steps": [
+        "Dockerfile ottimizzato",
+        "docker-compose.yaml",
+        "Variabili ambiente",
+        "Health checks",
+        "Domain setup",
+        "SSL/HTTPS"
+      ]
+    },
+    "landing-page": {
+      "description": "Creazione landing page moderna con animazioni",
+      "agents": ["ui-designer", "frontend-developer", "ui-component-manager", "seo-specialist", "web-performance-optimizer"],
+      "docs": ["ACETERNITY.md", "SHADCN.md", "TAILWIND.md"],
+      "steps": [
+        "Hero section con animazioni",
+        "Features section",
+        "Pricing section",
+        "Testimonials",
+        "CTA sections",
+        "Footer",
+        "SEO optimization",
+        "Performance audit"
+      ]
+    },
+    "saas-mvp": {
+      "description": "MVP SaaS completo (auth + db + payments + deploy)",
+      "agents": ["ux-researcher", "ui-designer", "nextjs-developer", "frontend-developer", "security-scanner", "seo-specialist", "test-generator"],
+      "docs": ["NEXTJS.md", "BETTER-AUTH.md", "SUPABASE.md", "STRIPE-SETUP.md", "COOLIFY.md", "SHADCN.md"],
+      "steps": [
+        "Setup Next.js con TypeScript",
+        "Configurazione database Supabase",
+        "Setup autenticazione Better Auth",
+        "Integrazione Stripe payments",
+        "Dashboard utente",
+        "Landing page",
+        "SEO e performance",
+        "Deploy Coolify"
+      ]
+    },
+    "cms-project": {
+      "description": "Setup completo progetto CMS con Payload",
+      "agents": ["cms-setup-wizard", "cms-schema-designer", "nextjs-developer", "frontend-developer"],
+      "skills": ["cms-setup", "cms-add-collection"],
+      "docs": ["PAYLOAD-CMS.md"],
+      "steps": [
+        "Setup Payload CMS 3.0",
+        "Configurazione database PostgreSQL",
+        "Selezione preset (ecommerce/portfolio/blog)",
+        "Configurazione collections",
+        "Frontend integration",
+        "Deploy"
+      ]
+    },
+    "cms-ecommerce": {
+      "description": "E-commerce completo con Payload CMS",
+      "agents": ["cms-setup-wizard", "cms-schema-designer", "frontend-developer", "seo-specialist", "security-scanner"],
+      "skills": ["cms-setup", "cms-add-collection", "cms-deploy"],
+      "docs": ["PAYLOAD-CMS.md", "STRIPE-SETUP.md"],
+      "preset": "ecommerceCollections",
+      "steps": [
+        "Setup Payload CMS con preset e-commerce",
+        "Configurazione Products, Categories, Orders",
+        "Integrazione Stripe",
+        "Frontend catalogo prodotti",
+        "Checkout flow",
+        "SEO prodotti",
+        "Deploy"
+      ]
+    },
+    "cms-blog": {
+      "description": "Blog con Payload CMS",
+      "agents": ["cms-setup-wizard", "cms-schema-designer", "frontend-developer", "seo-specialist"],
+      "skills": ["cms-setup", "cms-add-collection"],
+      "docs": ["PAYLOAD-CMS.md"],
+      "preset": "blogCollections",
+      "steps": [
+        "Setup Payload CMS con preset blog",
+        "Configurazione Posts, Authors, Categories",
+        "Frontend lista articoli",
+        "Pagina singolo articolo",
+        "RSS feed",
+        "SEO articoli",
+        "Deploy"
+      ]
+    },
+    "cms-portfolio": {
+      "description": "Portfolio con Payload CMS",
+      "agents": ["cms-setup-wizard", "cms-schema-designer", "ui-designer", "frontend-developer", "seo-specialist"],
+      "skills": ["cms-setup", "cms-add-collection"],
+      "docs": ["PAYLOAD-CMS.md", "ACETERNITY.md"],
+      "preset": "portfolioCollections",
+      "steps": [
+        "Setup Payload CMS con preset portfolio",
+        "Configurazione Projects, Services, Team",
+        "Design sistema visivo",
+        "Frontend progetti con animazioni",
+        "SEO portfolio",
+        "Deploy"
+      ]
+    },
+    "cms-content-ops": {
+      "description": "Operazioni sui contenuti CMS",
+      "agents": ["cms-content-manager"],
+      "skills": ["cms-content"],
+      "docs": ["PAYLOAD-CMS.md"],
+      "steps": [
+        "Import/Export dati",
+        "Seeding database",
+        "Bulk operations",
+        "Content migration"
+      ]
+    }
+  },
+  "documentation": {
+    "available": [
+      "NEXTJS.md",
+      "SHADCN.md",
+      "TAILWIND.md",
+      "SUPABASE.md",
+      "STRIPE-SETUP.md",
+      "COOLIFY.md",
+      "ACETERNITY.md",
+      "BETTER-AUTH.md",
+      "PAYLOAD-CMS.md"
+    ],
+    "path": ".claude/docs/"
+  },
+  "cmsKit": {
+    "package": "@deve1993/web-cms-kit",
+    "description": "Payload CMS 3.0 toolkit with preset collections",
+    "presets": {
+      "base": {
+        "collections": ["users", "media", "pages"],
+        "description": "Base collections (sempre necessarie)"
+      },
+      "ecommerce": {
+        "collections": ["products", "categories", "orders", "customers", "reviews"],
+        "description": "E-commerce con prodotti, ordini, clienti"
+      },
+      "portfolio": {
+        "collections": ["projects", "services", "team", "testimonials", "clients"],
+        "description": "Portfolio con progetti, servizi, team"
+      },
+      "blog": {
+        "collections": ["posts", "authors", "post-categories", "tags"],
+        "description": "Blog con articoli, autori, categorie"
+      }
+    },
+    "fields": ["slugField", "seoFields", "priceField", "imageField", "galleryField", "addressFields"],
+    "blocks": ["Hero", "Content", "Gallery", "CallToAction", "FAQ", "Contact"],
+    "access": ["isAdmin", "isAdminOrEditor", "isLoggedIn", "isAdminOrSelf", "isAdminOrPublished"]
+  }
+}
