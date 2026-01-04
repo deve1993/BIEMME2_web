@@ -32,7 +32,8 @@ export const fallbackHomePage: HomePage = {
         subtitle: "INDUSTRIALI",
         description:
           "La nostra esperienza e la nostra competenza ci permette di realizzare progetti industriali di ogni dimensione e complessità.",
-        imageUrl: "/img/hero-1.webp",
+        imageUrl: "/img/hero-1-opt.webp",
+        mobileImageUrl: "/img/hero-1-mobile.webp",
         ctaText: "Scopri di più",
         ctaHref: "/servizi#industriale",
       },
@@ -41,7 +42,8 @@ export const fallbackHomePage: HomePage = {
         subtitle: "CIVILI",
         description:
           "Il nostro Know how ci permette di realizzare qualsiasi progetto dal disegno all'opera finita, rispettando le esigenze del committente.",
-        imageUrl: "/img/hero-2.webp",
+        imageUrl: "/img/hero-2-opt.webp",
+        mobileImageUrl: "/img/hero-2-mobile.webp",
         ctaText: "Scopri di più",
         ctaHref: "/servizi#residenziale",
       },
@@ -50,7 +52,8 @@ export const fallbackHomePage: HomePage = {
         subtitle: "E RESTAURO",
         description:
           "Possiamo ristrutturare e restaurare immobili, in base alle esigenze tecniche richieste.",
-        imageUrl: "/img/hero-3.webp",
+        imageUrl: "/img/hero-3-opt.webp",
+        mobileImageUrl: "/img/hero-3-mobile.webp",
         ctaText: "Scopri di più",
         ctaHref: "/servizi",
       },

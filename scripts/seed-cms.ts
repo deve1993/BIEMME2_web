@@ -396,6 +396,102 @@ const machinery = [
   },
 ];
 
+// Homepage global data with hero slides
+const homePageData = {
+  seo: {
+    title: "BIEMME 2 - Costruzioni Edili dal 1990",
+    description:
+      "Costruzioni edili, ristrutturazioni e pronto intervento. Oltre 30 anni di esperienza nel settore edilizio.",
+  },
+  heroSlider: {
+    badge: "Dal 1990",
+    slides: [
+      {
+        title: "Costruzioni",
+        subtitle: "INDUSTRIALI",
+        description:
+          "La nostra esperienza e la nostra competenza ci permette di realizzare progetti industriali di ogni dimensione e complessità.",
+        imageUrl: "/img/hero-1-opt.webp",
+        ctaText: "Scopri di più",
+        ctaHref: "/servizi#industriale",
+      },
+      {
+        title: "Costruzioni",
+        subtitle: "CIVILI",
+        description:
+          "Il nostro Know how ci permette di realizzare qualsiasi progetto dal disegno all'opera finita, rispettando le esigenze del committente.",
+        imageUrl: "/img/hero-2-opt.webp",
+        ctaText: "Scopri di più",
+        ctaHref: "/servizi#residenziale",
+      },
+      {
+        title: "Ristrutturazione",
+        subtitle: "E RESTAURO",
+        description:
+          "Possiamo ristrutturare e restaurare immobili, in base alle esigenze tecniche richieste.",
+        imageUrl: "/img/hero-3-opt.webp",
+        ctaText: "Scopri di più",
+        ctaHref: "/servizi",
+      },
+    ],
+    secondaryCta: {
+      label: "Richiedi Preventivo",
+      href: "/contatti",
+    },
+    autoplayInterval: 6000,
+  },
+  featuresSection: {
+    subtitle: "I NOSTRI SERVIZI",
+    title: "Quello che ti serve",
+    description: "Soluzioni complete per ogni esigenza costruttiva.",
+    features: [
+      {
+        title: "Design e Costruzione",
+        description:
+          "Il nostro team, composto da professionisti del settore, avvalendosi di materiali di qualità e di tecniche costruttive all'avanguardia, garantisce l'esecuzione del progetto con i massimi livelli di qualità.",
+        icon: "architecture",
+      },
+      {
+        title: "Restauro Ristrutturazione",
+        description:
+          "Nel corso degli anni sono stati numerosi i progetti di ristrutturazione e restauro realizzati su palazzi, edifici commerciali o abitazioni. Valorizzare un edificio è un compito che richiede il controllo completo delle attività operative.",
+        icon: "home_repair_service",
+      },
+      {
+        title: "Rapidità Pronto Intervento",
+        description:
+          "Siamo in grado di offrire un servizio di pronto intervento immediato per urgenze, ad esempio rotture di tubazioni, ingorghi di scarichi, interventi che richiedono tempestività.",
+        icon: "emergency",
+      },
+    ],
+  },
+  statsSection: {
+    stats: [
+      { value: "30", suffix: "+", label: "Anni di Esperienza" },
+      { value: "200", suffix: "+", label: "Appartamenti Realizzati" },
+      { value: "100", suffix: "%", label: "Soddisfazione Clienti" },
+    ],
+  },
+  highlightsSection: {
+    highlights: [
+      { title: "Appassionati", subtitle: "Amiamo ciò che costruiamo." },
+      {
+        title: "Onesti e Trasparenti",
+        subtitle: "Chiarezza in ogni preventivo.",
+      },
+      { title: "Sempre Disponibili", subtitle: "Il tuo partner di fiducia." },
+    ],
+  },
+  ctaSection: {
+    title: "Pronti a Costruire il Tuo Progetto?",
+    description:
+      "Contattaci oggi per una consulenza gratuita e scopri come possiamo realizzare la tua visione.",
+    buttonLabel: "Contattaci Ora",
+    buttonHref: "/contatti",
+    phone: "+39 0363 958310",
+  },
+};
+
 const headerData = {
   logo: {
     alt: "BIEMME 2",
@@ -509,6 +605,17 @@ async function seedCMS() {
   await seedCollection("machinery", machinery);
 
   // Seed globals
+  console.log("\n--- Seeding HomePage Global ---");
+  try {
+    await payload.updateGlobal({
+      slug: "home-page",
+      data: homePageData as never,
+    });
+    console.log("HomePage global updated with hero slides");
+  } catch (error) {
+    console.error("Error updating home-page:", error);
+  }
+
   console.log("\n--- Seeding Header Global ---");
   try {
     await payload.updateGlobal({

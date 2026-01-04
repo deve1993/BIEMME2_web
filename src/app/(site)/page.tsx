@@ -1,6 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { HeroServer } from "@/components/ui/HeroServer";
+import { HeroSlider } from "@/components/ui/HeroSlider";
 import { getHomePageData } from "@/lib/data";
 import { DynamicIcon } from "@/components/ui/DynamicIcon";
 import { Button } from "@/components/ui/Button";
@@ -63,17 +63,12 @@ export default async function HomePage() {
       <Header navItems={headerNavItems} cta={headerCta} />
 
       <main className="flex-1">
-        {/* Hero Section - Server Component per LCP ottimale */}
-        <HeroServer
+        {/* Hero Slider - 3 foto rotanti con testi */}
+        <HeroSlider
           badge={page.heroSlider?.badge}
-          title={page.heroSlider?.slides?.[0]?.title}
-          subtitle={page.heroSlider?.slides?.[0]?.subtitle}
-          description={page.heroSlider?.slides?.[0]?.description}
-          ctaText={page.heroSlider?.slides?.[0]?.ctaText}
-          ctaHref={page.heroSlider?.slides?.[0]?.ctaHref}
-          secondaryCtaText={page.heroSlider?.secondaryCta?.label}
-          secondaryCtaHref={page.heroSlider?.secondaryCta?.href}
-          imageUrl={page.heroSlider?.slides?.[0]?.imageUrl}
+          slides={page.heroSlider?.slides}
+          secondaryCta={page.heroSlider?.secondaryCta}
+          autoplayInterval={page.heroSlider?.autoplayInterval ?? 8000}
         />
 
         {/* Features Section */}

@@ -16,14 +16,20 @@ interface HeroSliderProps {
   autoplayInterval?: number;
 }
 
+const DEFAULT_IMAGES = [
+  { desktop: "/img/hero-1-opt.webp", mobile: "/img/hero-1-mobile.webp" },
+  { desktop: "/img/hero-2-opt.webp", mobile: "/img/hero-2-mobile.webp" },
+  { desktop: "/img/hero-3-opt.webp", mobile: "/img/hero-3-mobile.webp" },
+];
+
 const defaultSlides: HeroSlide[] = [
   {
     title: "Costruzioni",
     subtitle: "INDUSTRIALI",
     description:
       "La nostra esperienza e la nostra competenza ci permette di realizzare progetti industriali di ogni dimensione e complessità.",
-    imageUrl: "/img/hero-1-opt.webp",
-    mobileImageUrl: "/img/hero-1-mobile.webp",
+    imageUrl: DEFAULT_IMAGES[0].desktop,
+    mobileImageUrl: DEFAULT_IMAGES[0].mobile,
     ctaText: "Scopri di più",
     ctaHref: "/servizi#industriale",
   },
@@ -32,8 +38,8 @@ const defaultSlides: HeroSlide[] = [
     subtitle: "CIVILI",
     description:
       "Il nostro Know how ci permette di realizzare qualsiasi progetto dal disegno all'opera finita, rispettando le esigenze del committente.",
-    imageUrl: "/img/hero-2-opt.webp",
-    mobileImageUrl: "/img/hero-2-mobile.webp",
+    imageUrl: DEFAULT_IMAGES[1].desktop,
+    mobileImageUrl: DEFAULT_IMAGES[1].mobile,
     ctaText: "Scopri di più",
     ctaHref: "/servizi#residenziale",
   },
@@ -42,19 +48,32 @@ const defaultSlides: HeroSlide[] = [
     subtitle: "E RESTAURO",
     description:
       "Possiamo ristrutturare e restaurare immobili, in base alle esigenze tecniche richieste.",
-    imageUrl: "/img/hero-3-opt.webp",
-    mobileImageUrl: "/img/hero-3-mobile.webp",
+    imageUrl: DEFAULT_IMAGES[2].desktop,
+    mobileImageUrl: DEFAULT_IMAGES[2].mobile,
     ctaText: "Scopri di più",
     ctaHref: "/servizi",
   },
 ];
 
-// Ottiene URL immagine senza stato isMobile - usa sempre desktop per SSR
-function getImageUrl(slide: HeroSlide): string {
+/**
+ * Ottiene URL immagine con fallback robusto
+ * Priorità: 1) Media object con url 2) imageUrl string 3) fallback default
+ */
+function getImageUrl(slide: HeroSlide, slideIndex: number = 0): string {
+  // 1. Se image è un oggetto Media con url valido
   if (slide.image && typeof slide.image === "object") {
-    return (slide.image as Media).url;
+    const mediaUrl = (slide.image as Media).url;
+    if (mediaUrl && mediaUrl.trim()) {
+      return mediaUrl;
+    }
   }
-  return slide.imageUrl ?? "";
+  // 2. Se imageUrl è una stringa non vuota
+  if (slide.imageUrl && slide.imageUrl.trim()) {
+    return slide.imageUrl;
+  }
+  // 3. Fallback al default per questa slide
+  const fallbackIndex = Math.min(slideIndex, DEFAULT_IMAGES.length - 1);
+  return DEFAULT_IMAGES[fallbackIndex].desktop;
 }
 
 export function HeroSlider({
@@ -99,26 +118,23 @@ export function HeroSlider({
         <div className="absolute inset-0 z-10 bg-black/40" />
         <div className="absolute inset-0 z-10 bg-gradient-to-r from-primary-start/80 to-transparent" />
 
-        {/* Prima slide: img nativo per LCP ottimale (no JS dependency) */}
-        {/* Altre slides: Next.js Image per lazy loading */}
+        {/* Prima slide: Next.js Image con priority per LCP ottimale */}
+        {/* Altre slides: Next.js Image con lazy loading */}
         {currentSlide === 0 ? (
-          <picture>
-            <source
-              media="(max-width: 768px)"
-              srcSet={slide.mobileImageUrl || "/img/hero-1-mobile.webp"}
-            />
-            <img
-              src={getImageUrl(slide)}
-              alt={`${slide.title} ${slide.subtitle}`}
-              fetchPriority="high"
-              decoding="async"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          </picture>
+          <Image
+            src={getImageUrl(slide, currentSlide)}
+            alt={`${slide.title} ${slide.subtitle}`}
+            fill
+            priority
+            fetchPriority="high"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1920px"
+            quality={75}
+            className="object-cover"
+          />
         ) : (
           <Image
             key={currentSlide}
-            src={getImageUrl(slide)}
+            src={getImageUrl(slide, currentSlide)}
             alt={`${slide.title} ${slide.subtitle}`}
             fill
             loading="lazy"

@@ -9,6 +9,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import type { Media } from "@/types/payload";
 
 interface HeroServerProps {
   badge?: string;
@@ -19,8 +20,11 @@ interface HeroServerProps {
   ctaHref?: string;
   secondaryCtaText?: string;
   secondaryCtaHref?: string;
+  image?: Media | string;
   imageUrl?: string;
 }
+
+const DEFAULT_IMAGE = "/img/hero-1-opt.webp";
 
 const defaults = {
   badge: "Dal 1990",
@@ -32,8 +36,27 @@ const defaults = {
   ctaHref: "/servizi#industriale",
   secondaryCtaText: "Richiedi Preventivo",
   secondaryCtaHref: "/contatti",
-  imageUrl: "/img/hero-1-opt.webp",
 };
+
+/**
+ * Estrae l'URL dell'immagine da varie fonti (CMS Media object, string URL, o fallback)
+ */
+function getHeroImageUrl(image?: Media | string, imageUrl?: string): string {
+  // 1. Se image è un oggetto Media con url
+  if (image && typeof image === "object" && image.url) {
+    return image.url;
+  }
+  // 2. Se image è una stringa non vuota
+  if (image && typeof image === "string") {
+    return image;
+  }
+  // 3. Se imageUrl è una stringa non vuota
+  if (imageUrl && imageUrl.trim()) {
+    return imageUrl;
+  }
+  // 4. Fallback al default
+  return DEFAULT_IMAGE;
+}
 
 export function HeroServer({
   badge = defaults.badge,
@@ -44,8 +67,11 @@ export function HeroServer({
   ctaHref = defaults.ctaHref,
   secondaryCtaText = defaults.secondaryCtaText,
   secondaryCtaHref = defaults.secondaryCtaHref,
-  imageUrl = defaults.imageUrl,
+  image,
+  imageUrl,
 }: HeroServerProps) {
+  const heroImageUrl = getHeroImageUrl(image, imageUrl);
+
   return (
     <section className="relative aspect-[4/3] min-h-[400px] w-full overflow-hidden sm:aspect-[16/10] sm:min-h-[450px] md:aspect-[16/9] md:min-h-[500px] lg:h-[750px] lg:min-h-[750px]">
       {/* Background Image - Server rendered, priority per LCP */}
@@ -55,7 +81,7 @@ export function HeroServer({
 
         {/* Next.js Image con priority - Server Component = no JS dependency */}
         <Image
-          src={imageUrl}
+          src={heroImageUrl}
           alt={`${title} ${subtitle}`}
           fill
           priority
