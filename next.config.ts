@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
   sassOptions: {
     silenceDeprecations: ["legacy-js-api", "import"],
   },
+  // Nascondi indicatore DevTools di Next.js
+  devIndicators: false,
   // Ottimizzazioni sperimentali
   experimental: {
     // Ottimizza e minifica CSS per ridurre bundle size

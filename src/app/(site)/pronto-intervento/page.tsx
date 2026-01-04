@@ -415,12 +415,7 @@ export default async function ProntoInterventoPage() {
                 {phone}
               </a>
 
-              <Button
-                href="/contatti"
-                variant="outline"
-                size="lg"
-                className="border-white text-white hover:bg-white hover:text-primary"
-              >
+              <Button href="/contatti" variant="outline-light" size="lg">
                 Richiedi Preventivo
               </Button>
             </div>

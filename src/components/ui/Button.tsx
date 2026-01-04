@@ -33,7 +33,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   `,
   "outline-light": `
     border-2 border-white/30 text-white bg-transparent
-    hover:border-white hover:bg-white/10 hover:text-primary-end
+    hover:border-white hover:bg-white hover:text-primary
   `,
   ghost: `
     text-text-secondary bg-transparent
