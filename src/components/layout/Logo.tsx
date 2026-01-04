@@ -1,31 +1,22 @@
-import Link from 'next/link';
+import Link from "next/link";
+import Image from "next/image";
 
 interface LogoProps {
   className?: string;
 }
 
-export function Logo({ className = '' }: LogoProps) {
+export function Logo({ className = "" }: LogoProps) {
   return (
-    <Link href="/" className={`flex items-center gap-2 ${className}`}>
-      {/* Icon Container */}
-      <div className="flex h-10 w-10 items-center justify-center rounded bg-gradient-to-br from-primary-end to-primary-start">
-        <span
-          className="material-symbols-outlined text-white"
-          style={{ fontSize: '24px' }}
-        >
-          construction
-        </span>
-      </div>
-
-      {/* Text */}
-      <div className="flex flex-col leading-none">
-        <span className="text-xl font-medium uppercase tracking-tight text-text-primary">
-          Biemme 2
-        </span>
-        <span className="text-[10px] font-light uppercase tracking-widest gradient-text">
-          Costruzioni
-        </span>
-      </div>
+    <Link href="/" className={`flex items-center ${className}`}>
+      {/* Logo Image - next/image ottimizzato con dimensioni esplicite */}
+      <Image
+        src="/img/logo.webp"
+        alt="Biemme 2 - Costruzioni"
+        width={180}
+        height={56}
+        priority // Logo è above-the-fold, preload
+        className="h-14 w-auto object-contain"
+      />
     </Link>
   );
 }

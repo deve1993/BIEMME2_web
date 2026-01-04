@@ -1,26 +1,29 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
+import { DynamicIcon } from "./DynamicIcon";
 import { Button } from "./Button";
+import type { HeroSlide, Media } from "@/types/payload";
 
-interface Slide {
-  title: string;
-  subtitle: string;
-  description: string;
-  image: string;
-  ctaText: string;
-  ctaHref: string;
+interface HeroSliderProps {
+  badge?: string;
+  slides?: HeroSlide[];
+  secondaryCta?: {
+    label?: string;
+    href?: string;
+  };
+  autoplayInterval?: number;
 }
 
-const slides: Slide[] = [
+const defaultSlides: HeroSlide[] = [
   {
     title: "Costruzioni",
     subtitle: "INDUSTRIALI",
     description:
       "La nostra esperienza e la nostra competenza ci permette di realizzare progetti industriali di ogni dimensione e complessità.",
-    image:
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&q=80",
+    imageUrl: "/img/hero-1-opt.webp",
+    mobileImageUrl: "/img/hero-1-mobile.webp",
     ctaText: "Scopri di più",
     ctaHref: "/servizi#industriale",
   },
@@ -29,8 +32,8 @@ const slides: Slide[] = [
     subtitle: "CIVILI",
     description:
       "Il nostro Know how ci permette di realizzare qualsiasi progetto dal disegno all'opera finita, rispettando le esigenze del committente.",
-    image:
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1920&q=80",
+    imageUrl: "/img/hero-2-opt.webp",
+    mobileImageUrl: "/img/hero-2-mobile.webp",
     ctaText: "Scopri di più",
     ctaHref: "/servizi#residenziale",
   },
@@ -39,159 +42,177 @@ const slides: Slide[] = [
     subtitle: "E RESTAURO",
     description:
       "Possiamo ristrutturare e restaurare immobili, in base alle esigenze tecniche richieste.",
-    image:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1920&q=80",
+    imageUrl: "/img/hero-3-opt.webp",
+    mobileImageUrl: "/img/hero-3-mobile.webp",
     ctaText: "Scopri di più",
     ctaHref: "/servizi",
   },
 ];
 
-export function HeroSlider() {
+// Ottiene URL immagine senza stato isMobile - usa sempre desktop per SSR
+function getImageUrl(slide: HeroSlide): string {
+  if (slide.image && typeof slide.image === "object") {
+    return (slide.image as Media).url;
+  }
+  return slide.imageUrl ?? "";
+}
+
+export function HeroSlider({
+  badge = "Dal 1990",
+  slides: propSlides,
+  secondaryCta,
+  autoplayInterval = 8000,
+}: HeroSliderProps) {
+  const slides =
+    propSlides && propSlides.length > 0 ? propSlides : defaultSlides;
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const goToSlide = useCallback(
-    (index: number) => {
-      if (isTransitioning) return;
-      setIsTransitioning(true);
-      setCurrentSlide(index);
-      setTimeout(() => setIsTransitioning(false), 700);
-    },
-    [isTransitioning],
-  );
+  // Memoized slide navigation
+  const goToSlide = useCallback((index: number) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    setCurrentSlide(index);
+  }, []);
 
-  const nextSlide = useCallback(() => {
-    goToSlide((currentSlide + 1) % slides.length);
-  }, [currentSlide, goToSlide]);
+  const goToNextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  }, [slides.length]);
 
-  // Auto-play
+  const goToPrevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  }, [slides.length]);
+
+  // Singolo useEffect per autoplay - semplificato
   useEffect(() => {
-    const interval = setInterval(nextSlide, 6000);
-    return () => clearInterval(interval);
-  }, [nextSlide]);
+    timerRef.current = setTimeout(goToNextSlide, autoplayInterval);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [currentSlide, autoplayInterval, goToNextSlide]);
+
+  const slide = slides[currentSlide];
 
   return (
-    <section className="relative h-[650px] w-full overflow-hidden md:h-[750px]">
-      {/* Slides */}
-      {slides.map((slide, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 transition-opacity duration-700 ${
-            index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
-          }`}
-        >
-          {/* Background Image con next/image */}
-          <div className="absolute inset-0">
-            <div className="absolute inset-0 z-10 bg-black/40" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-r from-primary-start/80 to-transparent" />
-            <Image
-              src={slide.image}
-              alt={`${slide.title} ${slide.subtitle}`}
-              fill
-              priority={index === 0}
-              sizes="100vw"
-              quality={85}
-              className={`object-cover transition-transform duration-[8000ms] ${
-                index === currentSlide ? "scale-105" : "scale-100"
-              }`}
+    <section className="relative aspect-[4/3] min-h-[400px] w-full overflow-hidden sm:aspect-[16/10] sm:min-h-[450px] md:aspect-[16/9] md:min-h-[500px] lg:h-[750px] lg:min-h-[750px]">
+      {/* Background Image - picture element per responsive mobile/desktop */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 z-10 bg-black/40" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-primary-start/80 to-transparent" />
+
+        {/* Prima slide: img nativo per LCP ottimale (no JS dependency) */}
+        {/* Altre slides: Next.js Image per lazy loading */}
+        {currentSlide === 0 ? (
+          <picture>
+            <source
+              media="(max-width: 768px)"
+              srcSet={slide.mobileImageUrl || "/img/hero-1-mobile.webp"}
             />
+            <img
+              src={getImageUrl(slide)}
+              alt={`${slide.title} ${slide.subtitle}`}
+              fetchPriority="high"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </picture>
+        ) : (
+          <Image
+            key={currentSlide}
+            src={getImageUrl(slide)}
+            alt={`${slide.title} ${slide.subtitle}`}
+            fill
+            loading="lazy"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1920px"
+            quality={75}
+            className="object-cover"
+          />
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="relative z-20 mx-auto flex h-full w-full max-w-7xl flex-col items-start justify-center px-6 lg:px-8">
+        <div className="max-w-3xl space-y-4 md:space-y-6">
+          <div className="inline-flex items-center gap-2 border-l-2 border-primary-end pl-4">
+            <span className="text-sm font-light uppercase tracking-widest text-white/80">
+              {badge}
+            </span>
           </div>
 
-          {/* Content */}
-          <div className="relative z-20 mx-auto flex h-full w-full max-w-7xl flex-col items-start justify-center px-6 lg:px-8">
-            <div
-              className={`max-w-3xl space-y-6 transition-all duration-700 ${
-                index === currentSlide
-                  ? "translate-y-0 opacity-100"
-                  : "translate-y-8 opacity-0"
-              }`}
-              style={{
-                transitionDelay: index === currentSlide ? "200ms" : "0ms",
-              }}
+          <h1 className="text-4xl font-light uppercase leading-tight tracking-tight text-white sm:text-5xl md:text-7xl">
+            {slide.title} <br />
+            <span className="font-normal text-white">{slide.subtitle}</span>
+          </h1>
+
+          <p className="max-w-xl text-base font-light leading-relaxed text-white/70 md:text-xl">
+            {slide.description}
+          </p>
+
+          <div className="flex flex-wrap gap-3 pt-2 md:gap-4 md:pt-4">
+            <Button
+              href={slide.ctaHref ?? "/servizi"}
+              variant="gradient"
+              size="lg"
             >
-              <div className="inline-flex items-center gap-2 border-l-2 border-primary-end pl-4">
-                <span className="text-sm font-light uppercase tracking-widest text-white/80">
-                  Dal 1990
-                </span>
-              </div>
-
-              <h1 className="text-4xl font-light uppercase leading-tight tracking-tight text-white sm:text-5xl md:text-7xl">
-                {slide.title} <br />
-                <span className="font-normal text-white">{slide.subtitle}</span>
-              </h1>
-
-              <p className="max-w-xl text-lg font-light leading-relaxed text-white/70 md:text-xl">
-                {slide.description}
-              </p>
-
-              <div className="flex flex-wrap gap-4 pt-4">
-                <Button href={slide.ctaHref} variant="gradient" size="lg">
-                  {slide.ctaText}
-                </Button>
-                <Button
-                  href="/contatti"
-                  variant="outline"
-                  size="lg"
-                  className="border-white/30 text-white hover:border-white hover:bg-white/10"
-                >
-                  Richiedi Preventivo
-                </Button>
-              </div>
-            </div>
+              {slide.ctaText ?? "Scopri di più"}
+            </Button>
+            <Button
+              href={secondaryCta?.href ?? "/contatti"}
+              variant="outline-light"
+              size="lg"
+            >
+              {secondaryCta?.label ?? "Richiedi Preventivo"}
+            </Button>
           </div>
         </div>
-      ))}
+      </div>
 
-      {/* Bottom Navigation: Arrow Left + Indicators + Arrow Right */}
-      <div className="absolute bottom-8 left-1/2 z-30 flex -translate-x-1/2 items-center gap-4">
-        {/* Arrow Left */}
+      {/* Navigation - senza transizioni per performance mobile */}
+      <div className="absolute bottom-6 left-1/2 z-30 flex -translate-x-1/2 items-center gap-3 md:bottom-8 md:gap-4">
         <button
-          onClick={() =>
-            goToSlide((currentSlide - 1 + slides.length) % slides.length)
-          }
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white backdrop-blur-sm transition-all hover:border-white/40 hover:bg-black/40"
+          onClick={() => {
+            if (timerRef.current) clearTimeout(timerRef.current);
+            goToPrevSlide();
+          }}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white md:h-12 md:w-12 md:hover:bg-black/40"
           aria-label="Slide precedente"
         >
-          <span
-            className="material-symbols-outlined"
-            style={{ fontSize: "20px" }}
-          >
-            chevron_left
-          </span>
+          <DynamicIcon name="chevron_left" size={20} />
         </button>
 
-        {/* Indicators */}
-        <div className="flex gap-3">
+        {/* Fixed-width dot containers to prevent layout shift */}
+        <div className="flex gap-2 md:gap-3">
           {slides.map((_, index) => (
-            <button
+            <div
               key={index}
-              onClick={() => goToSlide(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentSlide
-                  ? "w-8 bg-white"
-                  : "w-2 bg-white/40 hover:bg-white/60"
-              }`}
-              aria-label={`Vai alla slide ${index + 1}`}
-            />
+              className="flex h-2 w-6 items-center justify-center md:w-8"
+            >
+              <button
+                onClick={() => goToSlide(index)}
+                className={`h-2 rounded-full ${
+                  index === currentSlide
+                    ? "w-full bg-white"
+                    : "w-2 bg-white/40 md:hover:bg-white/60"
+                }`}
+                aria-label={`Vai alla slide ${index + 1}`}
+                aria-current={index === currentSlide ? "true" : undefined}
+              />
+            </div>
           ))}
         </div>
 
-        {/* Arrow Right */}
         <button
-          onClick={nextSlide}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white backdrop-blur-sm transition-all hover:border-white/40 hover:bg-black/40"
+          onClick={() => {
+            if (timerRef.current) clearTimeout(timerRef.current);
+            goToNextSlide();
+          }}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white md:h-12 md:w-12 md:hover:bg-black/40"
           aria-label="Slide successiva"
         >
-          <span
-            className="material-symbols-outlined"
-            style={{ fontSize: "20px" }}
-          >
-            chevron_right
-          </span>
+          <DynamicIcon name="chevron_right" size={20} />
         </button>
       </div>
 
-      {/* Bottom decorative strip */}
+      {/* Bottom strip */}
       <div
         className="absolute bottom-0 left-0 z-20 h-1 w-full"
         style={{ background: "var(--gradient-primary-horizontal)" }}

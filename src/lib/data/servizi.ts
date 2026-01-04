@@ -2,61 +2,92 @@
  * Servizi Page Data Fetching
  */
 
+import { getServiziPage, getHeader, getFooter } from "@/lib/payload";
 import {
-  getServices,
-  getPillars,
-  getBenefits,
-  getMachinery,
-  getHeader,
-  getFooter,
-} from "@/lib/payload";
-import {
-  fallbackServices,
-  fallbackPillars,
-  fallbackBenefits,
-  fallbackMachinery,
+  fallbackServiziPage,
+  fallbackHeader,
+  fallbackFooter,
 } from "@/lib/fallback-data";
-import type {
-  Service,
-  Pillar,
-  Benefit,
-  Machinery,
-  Header,
-  Footer,
-} from "@/types/payload";
+import type { ServiziPage, Header, Footer } from "@/types/payload";
 
 export interface ServiziPageData {
-  services: Service[];
-  pillars: Pillar[];
-  benefits: Benefit[];
-  machinery: Machinery[];
-  header: Header | null;
-  footer: Footer | null;
+  page: ServiziPage;
+  header: Header;
+  footer: Footer;
+}
+
+/**
+ * Helper to get array or fallback if empty
+ */
+function getArrayOrFallback<T>(
+  arr: T[] | undefined | null,
+  fallbackArr: T[],
+): T[] {
+  return arr && arr.length > 0 ? arr : fallbackArr;
+}
+
+/**
+ * Merge CMS data with fallback, using fallback for empty arrays
+ */
+function mergeServiziPageData(
+  cmsData: ServiziPage | null,
+  fallback: ServiziPage,
+): ServiziPage {
+  if (!cmsData) return fallback;
+
+  const services = getArrayOrFallback(
+    cmsData.servicesSection?.services,
+    fallback.servicesSection?.services ?? [],
+  );
+  const pillars = getArrayOrFallback(
+    cmsData.pillarsSection?.pillars,
+    fallback.pillarsSection?.pillars ?? [],
+  );
+  const benefits = getArrayOrFallback(
+    cmsData.benefitsSection?.benefits,
+    fallback.benefitsSection?.benefits ?? [],
+  );
+  const machinery = getArrayOrFallback(
+    cmsData.machinerySection?.machinery,
+    fallback.machinerySection?.machinery ?? [],
+  );
+
+  return {
+    ...fallback,
+    ...cmsData,
+    servicesSection: {
+      ...fallback.servicesSection,
+      ...cmsData.servicesSection,
+      services,
+    },
+    pillarsSection: {
+      ...fallback.pillarsSection,
+      ...cmsData.pillarsSection,
+      pillars,
+    },
+    benefitsSection: {
+      ...fallback.benefitsSection,
+      ...cmsData.benefitsSection,
+      benefits,
+    },
+    machinerySection: {
+      ...fallback.machinerySection,
+      ...cmsData.machinerySection,
+      machinery,
+    },
+  };
 }
 
 export async function getServiziPageData(): Promise<ServiziPageData> {
-  const [
-    servicesResult,
-    pillarsResult,
-    benefitsResult,
-    machineryResult,
-    header,
-    footer,
-  ] = await Promise.all([
-    getServices({ active: true }).catch(() => null),
-    getPillars({ active: true }).catch(() => null),
-    getBenefits({ active: true }).catch(() => null),
-    getMachinery({ active: true }).catch(() => null),
+  const [pageResult, headerResult, footerResult] = await Promise.all([
+    getServiziPage().catch(() => null),
     getHeader().catch(() => null),
     getFooter().catch(() => null),
   ]);
 
   return {
-    services: servicesResult ?? fallbackServices,
-    pillars: pillarsResult ?? fallbackPillars,
-    benefits: benefitsResult ?? fallbackBenefits,
-    machinery: machineryResult ?? fallbackMachinery,
-    header,
-    footer,
+    page: mergeServiziPageData(pageResult, fallbackServiziPage),
+    header: headerResult ?? fallbackHeader,
+    footer: footerResult ?? fallbackFooter,
   };
 }

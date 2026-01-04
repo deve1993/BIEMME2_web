@@ -1,3 +1,4 @@
+import { DynamicIcon } from "@/components/ui/DynamicIcon";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/Button";
@@ -8,6 +9,9 @@ import type { Metadata } from "next";
 import { getAziendaPageData } from "@/lib/data";
 import { getMediaUrl } from "@/lib/payload";
 
+// ISR: Revalidate every 5 minutes for optimal caching
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "Chi Siamo | BIEMME 2 Costruzioni",
   description:
@@ -15,34 +19,83 @@ export const metadata: Metadata = {
 };
 
 export default async function AziendaPage() {
-  const { timeline, values, team, certifications, header, footer } =
-    await getAziendaPageData();
+  const { page, header, footer } = await getAziendaPageData();
+
+  // Get data from page global
+  const timeline = page.storiaSection?.timeline ?? [];
+  const values = page.valoriSection?.values ?? [];
+  const team = page.teamSection?.members ?? [];
+  const certifications = page.certificazioniSection?.certifications ?? [];
+  const certificationsTitle =
+    page.certificazioniSection?.title ?? "Qualità Certificata";
+  const certificationsDescription =
+    page.certificazioniSection?.description ??
+    "Operiamo secondo i più alti standard internazionali per garantire sicurezza, affidabilità e rispetto dell'ambiente.";
+
+  // Hero Section data
+  const heroBadge = page.hero?.badge ?? "La Nostra Identità";
+  const heroTitle = page.hero?.title ?? "Chi Siamo";
+  const heroDescription =
+    page.hero?.description ??
+    "COSTRUTTORI PER PASSIONE. PASSIONE EFFICIENZA INNOVAZIONE SONO I NOSTRI REQUISITI PER MIGLIORARE IL NOSTRO TERRITORIO.";
+
+  // Storia Section data
+  const storiaTitle = page.storiaSection?.title ?? "La Nostra Storia";
+  const storiaDescription =
+    page.storiaSection?.description ??
+    "BIEMME 2 è una impresa generale di costruzioni radicata in Morengo (BG), con cantieri attivi in tutta la regione.";
+
+  // Valori Section data
+  const valoriTitle = page.valoriSection?.title ?? "I Nostri Valori";
+
+  // Team Section data
+  const teamTitle = page.teamSection?.title ?? "La Squadra";
+  const teamDescription =
+    page.teamSection?.description ??
+    "Le persone che rendono possibile l'impossibile, ogni giorno.";
+
+  // Organigramma Section data
+  const organigrammaTitle = page.organigrammaSection?.title ?? "Organigramma";
+  const direzioneTitle =
+    page.organigrammaSection?.direzione?.title ?? "Direzione Generale";
+  const direzioneSubtitle =
+    page.organigrammaSection?.direzione?.subtitle ??
+    "Strategia, Sviluppo & Controllo";
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section
-          className="relative flex min-h-[500px] flex-col items-center justify-center p-4"
-          style={{
-            backgroundImage: `linear-gradient(rgba(44, 15, 18, 0.65), rgba(44, 15, 18, 0.8)), url("https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&q=80")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className="flex max-w-[960px] flex-col items-center gap-6 text-center">
-            <div className="inline-flex items-center justify-center rounded-full border border-primary/30 bg-primary-muted px-4 py-1.5 backdrop-blur-sm">
-              <span className="text-xs font-light uppercase tracking-widest text-white">
-                La Nostra Identità
-              </span>
-            </div>
-            <h1 className="text-5xl font-light uppercase leading-tight tracking-tight text-white md:text-7xl">
-              Chi Siamo
+        <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-primary py-20 md:py-28">
+          {/* Decorative elements */}
+          <div className="pointer-events-none absolute inset-0">
+            <div
+              className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage: `linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px),
+                                 linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)`,
+                backgroundSize: "40px 40px",
+              }}
+            />
+            <div className="absolute -bottom-20 -right-20 h-80 w-80 rounded-full bg-white/5" />
+            <DynamicIcon
+              name="building2"
+              size={144}
+              className="absolute right-10 top-10 text-white/10"
+            />
+          </div>
+
+          <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
+            <span className="mb-4 inline-block text-sm font-light uppercase tracking-widest text-white/80">
+              {heroBadge}
+            </span>
+            <h1 className="text-4xl font-light leading-tight text-white md:text-5xl lg:text-6xl">
+              {heroTitle}
             </h1>
-            <p className="max-w-[700px] text-lg font-light leading-relaxed text-white/70 md:text-xl">
-              COSTRUTTORI PER PASSIONE. PASSIONE EFFICIENZA INNOVAZIONE SONO I
-              NOSTRI REQUISITI PER MIGLIORARE IL NOSTRO TERRITORIO.
+            <p className="mx-auto mt-4 max-w-2xl text-lg font-light text-white/80">
+              {heroDescription}
             </p>
           </div>
         </section>
@@ -55,8 +108,8 @@ export default async function AziendaPage() {
           <div className="mx-auto max-w-[960px] px-6 lg:px-8">
             <SectionTitle
               subtitle="Chi Siamo"
-              title="La Nostra Storia"
-              description="BIEMME 2 è una impresa generale di costruzioni radicata in Morengo (BG), con cantieri attivi in tutta la regione. Il suo nome rappresenta la 'memoria storica' delle proprie origini. Mantenerlo oggi serve per avere costantemente presente i valori cui si sono ispirati i soci fondatori, Berta Giovanni e Maffioletti Giuseppe."
+              title={storiaTitle}
+              description={storiaDescription}
             />
 
             <div className="relative mt-12 grid grid-cols-[60px_1fr] gap-x-4 md:grid-cols-[100px_1fr] md:gap-x-8">
@@ -69,36 +122,45 @@ export default async function AziendaPage() {
                 }}
               />
 
-              {timeline.map((item, index) => (
-                <div key={item.id} className="contents">
-                  {/* Icon Column */}
-                  <div className="relative z-10 flex flex-col items-center pt-2">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-primary bg-surface shadow-lg shadow-primary/20">
-                      <span
-                        className="material-symbols-outlined text-white"
-                        style={{ fontSize: "24px" }}
-                      >
-                        {item.icon}
+              {timeline.map(
+                (
+                  item: {
+                    year: string;
+                    title: string;
+                    description?: string;
+                    icon?: string;
+                  },
+                  index: number,
+                ) => (
+                  <div key={index} className="contents">
+                    {/* Icon Column */}
+                    <div className="relative z-10 flex flex-col items-center pt-2">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-primary bg-surface shadow-lg shadow-primary/20">
+                        <DynamicIcon
+                          name={item.icon ?? "construction"}
+                          size={24}
+                          className="text-white"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Content Column */}
+                    <div
+                      className={`flex flex-col pt-4 ${index < timeline.length - 1 ? "pb-12" : ""}`}
+                    >
+                      <span className="mb-1 text-sm font-light uppercase tracking-widest text-primary">
+                        {item.year}
                       </span>
+                      <h3 className="mb-2 text-xl font-medium text-text-primary md:text-2xl">
+                        {item.title}
+                      </h3>
+                      <p className="font-light leading-relaxed text-text-secondary">
+                        {item.description}
+                      </p>
                     </div>
                   </div>
-
-                  {/* Content Column */}
-                  <div
-                    className={`flex flex-col pt-4 ${index < timeline.length - 1 ? "pb-12" : ""}`}
-                  >
-                    <span className="mb-1 text-sm font-light uppercase tracking-widest text-primary">
-                      {item.year}
-                    </span>
-                    <h3 className="mb-2 text-xl font-medium text-text-primary md:text-2xl">
-                      {item.title}
-                    </h3>
-                    <p className="font-light leading-relaxed text-text-secondary">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ),
+              )}
             </div>
           </div>
         </section>
@@ -110,32 +172,182 @@ export default async function AziendaPage() {
         >
           <div className="mx-auto max-w-[1100px] px-6 lg:px-8">
             <SectionTitle
-              title="I Nostri Valori"
+              title={valoriTitle}
               description="I pilastri indistruttibili su cui costruiamo ogni singolo progetto, dal piccolo intervento alla grande opera."
               centered
             />
 
             <div className="grid gap-6 md:grid-cols-3">
-              {values.map((value) => (
-                <Card key={value.id} className="group">
-                  <CardContent>
-                    <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-lg bg-primary-muted text-primary transition-transform duration-300 group-hover:scale-110">
-                      <span
-                        className="material-symbols-outlined"
-                        style={{ fontSize: "40px" }}
-                      >
-                        {value.icon}
+              {values.map(
+                (
+                  value: { title: string; description?: string; icon?: string },
+                  idx: number,
+                ) => (
+                  <Card key={idx} className="group">
+                    <CardContent>
+                      <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-lg bg-primary-muted text-primary transition-transform duration-300 group-hover:scale-110">
+                        <DynamicIcon
+                          name={value.icon ?? "construction"}
+                          size={40}
+                        />
+                      </div>
+                      <h3 className="mb-2 text-xl font-medium text-text-primary">
+                        {value.title}
+                      </h3>
+                      <p className="font-light leading-relaxed text-text-secondary">
+                        {value.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ),
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Organigramma Section */}
+        <section className="border-y border-border bg-surface-elevated py-20 transition-theme">
+          <div className="mx-auto max-w-[1100px] px-6 lg:px-8">
+            <SectionTitle
+              title={organigrammaTitle}
+              description="Una struttura organizzata per garantire efficienza e precisione in ogni commessa."
+              centered
+            />
+
+            <div className="mt-16 flex flex-col items-center">
+              {/* Level 1: Direzione */}
+              <div className="relative z-10 flex flex-col items-center">
+                <div className="flex w-72 flex-col items-center gap-2 rounded-xl border border-primary/20 bg-surface p-6 text-center shadow-lg transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-primary/10">
+                  <span className="rounded-full bg-primary/10 p-3 text-primary">
+                    <DynamicIcon name="gem" size={32} />
+                  </span>
+                  <h4 className="text-xl font-medium text-primary">
+                    {direzioneTitle}
+                  </h4>
+                  <div className="h-px w-16 bg-gradient-to-r from-transparent via-primary/30 to-transparent my-1"></div>
+                  <p className="text-sm font-light text-text-secondary">
+                    {direzioneSubtitle}
+                  </p>
+                </div>
+                {/* Vertical Connector Down */}
+                <div className="h-12 w-px bg-border"></div>
+              </div>
+
+              {/* Level 2: Departments Container */}
+              <div className="relative grid w-full grid-cols-1 gap-8 md:grid-cols-3 md:gap-4">
+                {/* Horizontal Connector (Desktop Only) */}
+                <div className="absolute left-0 right-0 top-0 -z-0 hidden justify-center md:flex">
+                  <div className="h-px w-[66%] bg-border"></div>
+                </div>
+
+                {/* --- Area Tecnica --- */}
+                <div className="flex flex-col items-center">
+                  {/* Vertical Connector Top */}
+                  <div className="hidden h-8 w-px bg-border md:block"></div>
+
+                  {/* Department Card */}
+                  <div className="group relative mb-6 flex w-full max-w-[320px] cursor-default flex-col items-center rounded-lg border border-border bg-surface p-5 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
+                    <span className="mb-3 text-primary transition-transform duration-300 group-hover:scale-110">
+                      <DynamicIcon name="wrench" size={32} />
+                    </span>
+                    <h5 className="mb-1 text-lg font-medium text-text-primary group-hover:text-primary">
+                      Area Tecnica
+                    </h5>
+                    <p className="text-xs uppercase tracking-wider text-text-secondary opacity-80">
+                      Progettazione & Sicurezza
+                    </p>
+                  </div>
+
+                  {/* Vertical Connector Middle */}
+                  <div className="h-6 w-px bg-border"></div>
+
+                  {/* Sub-functions */}
+                  <div className="flex w-full max-w-[280px] flex-col gap-3">
+                    <div className="relative flex items-center justify-center rounded border border-border bg-background px-4 py-3 text-center text-sm text-text-secondary shadow-sm transition-colors hover:border-primary/20 hover:text-primary">
+                      Capi Cantiere
+                    </div>
+                    <div className="relative flex items-center justify-center rounded border border-border bg-background px-4 py-3 text-center text-sm text-text-secondary shadow-sm transition-colors hover:border-primary/20 hover:text-primary">
+                      Team Operativo
+                      <span className="ml-2 text-[10px] text-text-secondary/50">
+                        (Specializzati)
                       </span>
                     </div>
-                    <h3 className="mb-2 text-xl font-medium text-text-primary">
-                      {value.title}
-                    </h3>
-                    <p className="font-light leading-relaxed text-text-secondary">
-                      {value.description}
+                    <div className="relative flex items-center justify-center rounded border border-border bg-background px-4 py-3 text-center text-sm text-text-secondary shadow-sm transition-colors hover:border-primary/20 hover:text-primary">
+                      Gestione Mezzi
+                    </div>
+                  </div>
+                </div>
+
+                {/* --- Amministrazione --- */}
+                <div className="flex flex-col items-center">
+                  {/* Vertical Connector Top */}
+                  <div className="hidden h-8 w-px bg-border md:block"></div>
+
+                  {/* Department Card */}
+                  <div className="group relative mb-6 flex w-full max-w-[320px] cursor-default flex-col items-center rounded-lg border border-border bg-surface p-5 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
+                    <span className="mb-3 text-primary transition-transform duration-300 group-hover:scale-110">
+                      <DynamicIcon name="user_cog" size={32} />
+                    </span>
+                    <h5 className="mb-1 text-lg font-medium text-text-primary group-hover:text-primary">
+                      Amministrazione
+                    </h5>
+                    <p className="text-xs uppercase tracking-wider text-text-secondary opacity-80">
+                      Finanza & HR
                     </p>
-                  </CardContent>
-                </Card>
-              ))}
+                  </div>
+
+                  {/* Vertical Connector Middle */}
+                  <div className="h-6 w-px bg-border"></div>
+
+                  {/* Sub-functions */}
+                  <div className="flex w-full max-w-[280px] flex-col gap-3">
+                    <div className="relative flex items-center justify-center rounded border border-border bg-background px-4 py-3 text-center text-sm text-text-secondary shadow-sm transition-colors hover:border-primary/20 hover:text-primary">
+                      Contabilità Generale
+                    </div>
+                    <div className="relative flex items-center justify-center rounded border border-border bg-background px-4 py-3 text-center text-sm text-text-secondary shadow-sm transition-colors hover:border-primary/20 hover:text-primary">
+                      Risorse Umane
+                    </div>
+                    <div className="relative flex items-center justify-center rounded border border-border bg-background px-4 py-3 text-center text-sm text-text-secondary shadow-sm transition-colors hover:border-primary/20 hover:text-primary">
+                      Controllo di Gestione
+                    </div>
+                  </div>
+                </div>
+
+                {/* --- Commerciale --- */}
+                <div className="flex flex-col items-center">
+                  {/* Vertical Connector Top */}
+                  <div className="hidden h-8 w-px bg-border md:block"></div>
+
+                  {/* Department Card */}
+                  <div className="group relative mb-6 flex w-full max-w-[320px] cursor-default flex-col items-center rounded-lg border border-border bg-surface p-5 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
+                    <span className="mb-3 text-primary transition-transform duration-300 group-hover:scale-110">
+                      <DynamicIcon name="handshake" size={32} />
+                    </span>
+                    <h5 className="mb-1 text-lg font-medium text-text-primary group-hover:text-primary">
+                      Commerciale
+                    </h5>
+                    <p className="text-xs uppercase tracking-wider text-text-secondary opacity-80">
+                      Vendite & Gare
+                    </p>
+                  </div>
+
+                  {/* Vertical Connector Middle */}
+                  <div className="h-6 w-px bg-border"></div>
+
+                  {/* Sub-functions */}
+                  <div className="flex w-full max-w-[280px] flex-col gap-3">
+                    <div className="relative flex items-center justify-center rounded border border-border bg-background px-4 py-3 text-center text-sm text-text-secondary shadow-sm transition-colors hover:border-primary/20 hover:text-primary">
+                      Ufficio Acquisti
+                    </div>
+                    <div className="relative flex items-center justify-center rounded border border-border bg-background px-4 py-3 text-center text-sm text-text-secondary shadow-sm transition-colors hover:border-primary/20 hover:text-primary">
+                      Relazioni Clienti
+                    </div>
+                    <div className="relative flex items-center justify-center rounded border border-border bg-background px-4 py-3 text-center text-sm text-text-secondary shadow-sm transition-colors hover:border-primary/20 hover:text-primary">
+                      Ufficio Gare
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -145,90 +357,108 @@ export default async function AziendaPage() {
           <div className="mx-auto max-w-[960px] px-6 lg:px-8">
             <div className="mb-12 flex flex-col justify-between gap-4 border-b border-border pb-6 md:flex-row md:items-end">
               <h2 className="text-3xl font-light text-text-primary md:text-4xl">
-                La Squadra
+                {teamTitle}
               </h2>
               <p className="font-light text-text-secondary md:max-w-[400px] md:text-right">
-                Le persone che rendono possibile l&apos;impossibile, ogni
-                giorno.
+                {teamDescription}
               </p>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-3">
-              {team.map((member) => {
-                const imageUrl = member.photo
-                  ? getMediaUrl(member.photo)
-                  : "https://images.unsplash.com/photo-1581092921461-eab62e97a78e?w=400&q=80";
-                return (
-                  <div
-                    key={member.id}
-                    className="group flex flex-col items-center text-center"
-                  >
-                    <div className="relative mb-6">
-                      <div className="relative z-10 h-40 w-40 overflow-hidden rounded-full border-4 border-surface grayscale transition-all duration-500 group-hover:grayscale-0">
-                        <Image
-                          src={imageUrl}
-                          alt={member.name}
-                          fill
-                          sizes="160px"
-                          quality={80}
-                          loading="lazy"
-                          className="object-cover"
-                        />
+            <div className="grid gap-8 md:grid-cols-3 lg:grid-cols-5">
+              {team.map(
+                (
+                  member: {
+                    name: string;
+                    role?: string;
+                    bio?: string;
+                    photo?: any;
+                  },
+                  idx: number,
+                ) => {
+                  // Use local photo based on name, or CMS photo if available
+                  const nameSlug = member.name
+                    .toLowerCase()
+                    .replace(/^geom\.\s*/i, "")
+                    .replace(/\s+/g, "-")
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "");
+                  const localPhoto = `/img/team/${nameSlug}.webp`;
+                  const imageUrl = member.photo
+                    ? getMediaUrl(member.photo)
+                    : localPhoto;
+                  return (
+                    <div
+                      key={idx}
+                      className="group flex flex-col items-center text-center"
+                    >
+                      <div className="relative mb-6">
+                        <div className="relative z-10 h-40 w-40 overflow-hidden rounded-full border-4 border-surface grayscale transition-all duration-300 group-hover:grayscale-0">
+                          <Image
+                            src={imageUrl}
+                            alt={member.name}
+                            fill
+                            sizes="160px"
+                            quality={80}
+                            loading="lazy"
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="absolute -inset-2 z-0 scale-90 rounded-full border border-primary/30 transition-transform duration-300 group-hover:scale-100" />
                       </div>
-                      <div className="absolute -inset-2 z-0 scale-90 rounded-full border border-primary/30 transition-transform duration-500 group-hover:scale-100" />
+                      <h3 className="mb-1 text-xl font-medium text-text-primary">
+                        {member.name}
+                      </h3>
+                      <span className="mb-3 text-sm font-light uppercase tracking-wider text-primary">
+                        {member.role}
+                      </span>
+                      <p className="whitespace-pre-line px-4 text-sm font-light text-text-secondary">
+                        {member.bio}
+                      </p>
                     </div>
-                    <h3 className="mb-1 text-xl font-medium text-text-primary">
-                      {member.name}
-                    </h3>
-                    <span className="mb-3 text-sm font-light uppercase tracking-wider text-primary">
-                      {member.role}
-                    </span>
-                    <p className="px-4 text-sm font-light text-text-secondary">
-                      {member.bio}
-                    </p>
-                  </div>
-                );
-              })}
+                  );
+                },
+              )}
             </div>
           </div>
         </section>
 
         {/* Certifications Section */}
         <section
-          className="py-16"
+          className="py-20"
           style={{ background: "var(--gradient-primary-horizontal)" }}
         >
-          <div className="mx-auto flex max-w-[960px] flex-col items-center justify-between gap-8 px-6 md:flex-row lg:px-8">
-            <div className="flex flex-col gap-2 text-center md:text-left">
-              <h2 className="text-2xl font-light text-white">
-                Le nostre Certificazioni
+          <div className="mx-auto flex max-w-[960px] flex-col items-center justify-between gap-12 px-6 lg:px-8">
+            <div className="text-center">
+              <h2 className="text-3xl font-light uppercase tracking-tight text-white md:text-4xl">
+                {certificationsTitle}
               </h2>
-              <p className="text-sm font-light text-white/70">
-                Qualità riconosciuta a livello internazionale.
+              <p className="mt-4 max-w-2xl text-lg font-light text-white/80">
+                {certificationsDescription}
               </p>
             </div>
-            <div className="mt-8 grid w-full gap-6 md:grid-cols-3">
-              {certifications.map((cert) => (
-                <div
-                  key={cert.id}
-                  className="flex flex-col gap-3 rounded-lg border border-white/20 bg-white/5 p-6 backdrop-blur-sm transition-transform hover:-translate-y-1"
-                >
-                  <div className="mb-2 flex items-center gap-3">
-                    <span
-                      className="material-symbols-outlined text-white"
-                      style={{ fontSize: "28px" }}
-                    >
-                      verified
-                    </span>
-                    <span className="text-xl font-medium text-white">
+
+            <div className="grid w-full gap-8 md:grid-cols-3">
+              {certifications.map(
+                (
+                  cert: { name: string; description?: string; icon?: string },
+                  idx: number,
+                ) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col items-center gap-4 rounded-xl border border-white/20 bg-white/10 p-6 backdrop-blur-sm transition-transform hover:-translate-y-1"
+                  >
+                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white text-primary">
+                      <DynamicIcon name={cert.icon ?? "verified"} size={48} />
+                    </div>
+                    <h3 className="text-xl font-medium text-white">
                       {cert.name}
-                    </span>
+                    </h3>
+                    <p className="text-center text-sm font-light text-white/80">
+                      {cert.description}
+                    </p>
                   </div>
-                  <p className="text-sm font-light leading-relaxed text-white/80">
-                    {cert.description}
-                  </p>
-                </div>
-              ))}
+                ),
+              )}
             </div>
           </div>
         </section>

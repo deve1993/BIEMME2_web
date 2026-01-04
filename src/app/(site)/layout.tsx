@@ -1,20 +1,15 @@
-import type { Metadata, Viewport } from "next";
-import { Space_Grotesk } from "next/font/google";
-import "../globals.css";
+import type { Metadata } from "next";
+import {
+  AnalyticsHead,
+  AnalyticsBody,
+} from "@/components/analytics/AnalyticsServer";
+import { JsonLd } from "@/components/seo";
+import { LazyLivePreview } from "@/components/providers/LazyLivePreview";
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-space-grotesk",
-  display: "swap",
-  preload: true,
-});
-
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  themeColor: "#4a1a1e",
-};
+/*
+  Site Layout - Extends root layout with site-specific content.
+  html/body tags are in root layout (src/app/layout.tsx).
+*/
 
 export const metadata: Metadata = {
   title: "BIEMME 2 | Costruzioni Edili",
@@ -48,29 +43,48 @@ export default function SiteLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="it" suppressHydrationWarning>
-      <head>
-        {/* Preconnect per risorse esterne critiche */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
+    <>
+      {/* Preconnect per font Google - riduce latenza */}
+      <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossOrigin="anonymous"
+      />
 
-        {/* Material Symbols - Caricamento standard per evitare FOUC */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
-          rel="stylesheet"
-        />
-      </head>
-      <body suppressHydrationWarning>
-        <div
-          className={`site-wrapper ${spaceGrotesk.variable} font-body antialiased`}
-        >
-          {children}
-        </div>
-      </body>
-    </html>
+      {/* DNS Prefetch per analytics - caricati dopo interazione */}
+      <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+      <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+      <link rel="dns-prefetch" href="https://connect.facebook.net" />
+
+      {/* Preload hero images per LCP ottimale - desktop e mobile */}
+      <link
+        rel="preload"
+        as="image"
+        href="/img/hero-1-opt.webp"
+        media="(min-width: 769px)"
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        href="/img/hero-1-mobile.webp"
+        media="(max-width: 768px)"
+        fetchPriority="high"
+      />
+
+      {/* Analytics Scripts (GA4, GTM, Meta Pixel) - deferred after interaction */}
+      <AnalyticsHead />
+
+      {/* SEO Structured Data (JSON-LD) */}
+      <JsonLd type="all" />
+
+      {/* GTM NoScript fallback */}
+      <AnalyticsBody />
+
+      {/* Live Preview listener for CMS real-time updates - lazy loaded */}
+      <LazyLivePreview />
+
+      <div className="site-wrapper">{children}</div>
+    </>
   );
 }

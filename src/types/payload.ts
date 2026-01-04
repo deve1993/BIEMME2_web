@@ -191,89 +191,68 @@ export interface SocialLink {
 }
 
 export interface ContactInfo {
+  address?: string;
+  city?: string;
   phone?: string;
-  phoneLabel?: string;
   email?: string;
-  emailLabel?: string;
-  address?: {
-    street?: string;
-    city?: string;
-    province?: string;
-    cap?: string;
-    country?: string;
-  };
+  pec?: string;
   vatNumber?: string;
-  fiscalCode?: string;
 }
 
 export interface Header {
   logo?: {
     image?: Media;
-    darkImage?: Media;
-    text?: string;
-    link?: string;
+    alt?: string;
   };
-  navigation?: Menu | string;
+  navigation?: {
+    label: string;
+    href: string;
+    children?: {
+      label: string;
+      href: string;
+      description?: string;
+    }[];
+  }[];
   cta?: {
-    enabled?: boolean;
-    text?: string;
-    link?: string;
-    style?: "primary" | "secondary" | "outline" | "gradient";
-  };
-  contactInfo?: {
+    label?: string;
+    href?: string;
     phone?: string;
-    phoneLabel?: string;
-    email?: string;
-    emailLabel?: string;
-  };
-  socialLinks?: SocialLink[];
-  settings?: {
-    sticky?: boolean;
-    transparent?: boolean;
-    showLanguageSwitcher?: boolean;
-    showSearch?: boolean;
   };
 }
 
 export interface Footer {
-  logo?: {
-    image?: Media;
-    text?: string;
+  companyInfo?: {
+    name?: string;
     description?: string;
+    logo?: Media;
+  };
+  contact?: {
+    address?: string;
+    city?: string;
+    phone?: string;
+    email?: string;
+    pec?: string;
+    vatNumber?: string;
   };
   columns?: FooterColumn[];
-  contactInfo?: ContactInfo;
-  socialLinks?: SocialLink[];
-  newsletter?: {
-    enabled?: boolean;
-    title?: string;
-    description?: string;
-    buttonText?: string;
-    placeholderText?: string;
-  };
-  cta?: {
-    enabled?: boolean;
-    text?: string;
-    link?: string;
-    style?: "primary" | "secondary" | "outline" | "gradient";
-  };
-  bottomBar?: {
+  social?: {
+    platform: "facebook" | "instagram" | "linkedin" | "youtube";
+    url: string;
+  }[];
+  legal?: {
     copyright?: string;
-    legalLinks?: {
+    links?: {
       label: string;
-      url: string;
+      href: string;
     }[];
-    paymentMethods?: string[];
   };
 }
 
 export interface FooterColumn {
   title: string;
-  menu?: Menu | string;
   links?: {
     label: string;
-    url: string;
-    page?: Page | string;
+    href: string;
   }[];
 }
 
@@ -566,4 +545,281 @@ export interface PayloadError {
     message: string;
     name: string;
   }[];
+}
+
+// ============================================================================
+// Page Global Types
+// ============================================================================
+
+export interface HeroSlide {
+  title: string;
+  subtitle: string;
+  description?: string;
+  image?: Media;
+  imageUrl?: string;
+  mobileImageUrl?: string;
+  ctaText?: string;
+  ctaHref?: string;
+}
+
+export interface HomePage {
+  seo?: {
+    title?: string;
+    description?: string;
+    ogImage?: Media;
+  };
+  heroSlider?: {
+    badge?: string;
+    slides?: HeroSlide[];
+    secondaryCta?: { label?: string; href?: string };
+    autoplayInterval?: number;
+  };
+  featuresSection?: {
+    subtitle?: string;
+    title?: string;
+    description?: string;
+    features?: {
+      title: string;
+      description?: string;
+      icon?: string;
+    }[];
+  };
+  statsSection?: {
+    stats?: {
+      value: string;
+      suffix?: string;
+      prefix?: string;
+      label: string;
+    }[];
+  };
+  highlightsSection?: {
+    highlights?: {
+      title: string;
+      subtitle?: string;
+    }[];
+  };
+  ctaSection?: {
+    title?: string;
+    description?: string;
+    buttonLabel?: string;
+    buttonHref?: string;
+    phone?: string;
+  };
+}
+
+export interface ServiziPage {
+  seo?: {
+    title?: string;
+    description?: string;
+    ogImage?: Media;
+  };
+  hero?: {
+    badge?: string;
+    title?: string;
+    description?: string;
+  };
+  servicesSection?: {
+    services?: {
+      title: string;
+      slug: string;
+      excerpt?: string;
+      icon?: string;
+      image?: Media;
+      features?: { title: string }[];
+    }[];
+  };
+  pillarsSection?: {
+    subtitle?: string;
+    title?: string;
+    pillars?: {
+      title: string;
+      description?: string;
+      icon?: string;
+    }[];
+  };
+  benefitsSection?: {
+    subtitle?: string;
+    title?: string;
+    benefits?: {
+      title: string;
+      description?: string;
+      icon?: string;
+    }[];
+  };
+  machinerySection?: {
+    title?: string;
+    description?: string;
+    machinery?: {
+      name: string;
+      description?: string;
+      icon?: string;
+      image?: Media;
+    }[];
+  };
+  ctaSection?: {
+    title?: string;
+    description?: string;
+    buttonLabel?: string;
+    buttonHref?: string;
+  };
+}
+
+export interface AziendaPage {
+  seo?: {
+    title?: string;
+    description?: string;
+    ogImage?: Media;
+  };
+  hero?: {
+    badge?: string;
+    title?: string;
+    description?: string;
+  };
+  storiaSection?: {
+    title?: string;
+    description?: string;
+    timeline?: {
+      year: string;
+      title: string;
+      description?: string;
+      icon?: string;
+    }[];
+  };
+  valoriSection?: {
+    title?: string;
+    values?: {
+      title: string;
+      description?: string;
+      icon?: string;
+    }[];
+  };
+  organigrammaSection?: {
+    title?: string;
+    direzione?: {
+      title?: string;
+      subtitle?: string;
+    };
+    aree?: {
+      title: string;
+      subtitle?: string;
+    }[];
+  };
+  teamSection?: {
+    title?: string;
+    description?: string;
+    members?: {
+      name: string;
+      role: string;
+      bio?: string;
+      photo?: Media;
+    }[];
+  };
+  certificazioniSection?: {
+    title?: string;
+    description?: string;
+    certifications?: {
+      name: string;
+      description?: string;
+      icon?: string;
+      image?: Media;
+    }[];
+  };
+}
+
+export interface ContattiPage {
+  seo?: {
+    title?: string;
+    description?: string;
+    ogImage?: Media;
+  };
+  hero?: {
+    badge?: string;
+    title?: string;
+    description?: string;
+  };
+  contactInfo?: {
+    sedeTitle?: string;
+    address?: string;
+    city?: string;
+    telefonoTitle?: string;
+    phone?: string;
+    emailTitle?: string;
+    email?: string;
+    orari?: string;
+  };
+  formSection?: {
+    title?: string;
+    description?: string;
+    servizi?: {
+      label: string;
+      value: string;
+    }[];
+    submitLabel?: string;
+    successMessage?: string;
+  };
+  mapSection?: {
+    title?: string;
+    embedUrl?: string;
+    coordinates?: {
+      lat?: number;
+      lng?: number;
+    };
+  };
+}
+
+export interface ProntoInterventoPage {
+  seo?: {
+    title?: string;
+    description?: string;
+    ogImage?: Media;
+  };
+  hero?: {
+    badge?: string;
+    title?: string;
+    description?: string;
+    phone?: string;
+    phoneLabel?: string;
+    availability?: string;
+  };
+  emergencyServicesSection?: {
+    subtitle?: string;
+    title?: string;
+    services?: {
+      icon?: string;
+      title: string;
+      description?: string;
+      features?: { text: string }[];
+    }[];
+  };
+  processSection?: {
+    title?: string;
+    steps?: {
+      number?: string;
+      icon?: string;
+      title: string;
+      description?: string;
+    }[];
+  };
+  whyUsSection?: {
+    subtitle?: string;
+    title?: string;
+    description?: string;
+    benefits?: {
+      icon?: string;
+      title: string;
+      description?: string;
+    }[];
+  };
+  statsSection?: {
+    stats?: {
+      value: string;
+      label: string;
+    }[];
+  };
+  ctaSection?: {
+    title?: string;
+    description?: string;
+    phone?: string;
+    buttonLabel?: string;
+  };
 }

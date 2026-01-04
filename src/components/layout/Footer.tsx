@@ -1,34 +1,17 @@
 import Link from "next/link";
+import { DynamicIcon } from "@/components/ui/DynamicIcon";
 import { Logo } from "./Logo";
-import {
-  fallbackContactInfo,
-  fallbackFooterColumns,
-  fallbackFooterLegal,
-} from "@/lib/fallback-data";
-import type { ContactInfo } from "@/types/payload";
-
-// Fallback links structure
-const defaultFooterLinks = {
-  azienda: [
-    { href: "/azienda", label: "Chi Siamo" },
-    { href: "/azienda#valori", label: "I Nostri Valori" },
-    { href: "/azienda#storia", label: "La Nostra Storia" },
-  ],
-  servizi: [
-    { href: "/servizi", label: "Tutti i Servizi" },
-    { href: "/servizi#residenziale", label: "Edilizia Residenziale" },
-    { href: "/servizi#industriale", label: "Edilizia Industriale" },
-    { href: "/servizi#scavi", label: "Scavi e Movimento Terra" },
-    { href: "/pronto-intervento", label: "Pronto Intervento H24" },
-  ],
-  contatti: [
-    { href: "/contatti", label: "Contattaci" },
-    { href: "/contatti#form", label: "Richiedi Preventivo" },
-  ],
-};
+import { fallbackFooter } from "@/lib/fallback-data";
 
 export interface FooterProps {
-  contactInfo?: ContactInfo;
+  contactInfo?: {
+    address?: string;
+    city?: string;
+    phone?: string;
+    email?: string;
+    pec?: string;
+    vatNumber?: string;
+  };
   columns?: Array<{
     title: string;
     links: Array<{ label: string; href: string }>;
@@ -38,9 +21,9 @@ export interface FooterProps {
 
 export function Footer({ contactInfo, columns, legalLinks }: FooterProps = {}) {
   // Use CMS data if available, otherwise use fallback
-  const contact = contactInfo ?? fallbackContactInfo;
-  const footerColumns = columns ?? fallbackFooterColumns;
-  const legal = legalLinks ?? fallbackFooterLegal;
+  const contact = contactInfo ?? fallbackFooter.contact ?? {};
+  const footerColumns = columns ?? fallbackFooter.columns ?? [];
+  const legal = legalLinks ?? fallbackFooter.legal?.links ?? [];
   const currentYear = new Date().getFullYear();
 
   return (
@@ -54,16 +37,34 @@ export function Footer({ contactInfo, columns, legalLinks }: FooterProps = {}) {
               Da oltre 30 anni ci occupiamo di costruzioni. Il nostro know-how
               ci permette di fornire soluzioni chiavi in mano.
             </p>
-            <div className="mt-6 flex items-center gap-3">
-              <span
-                className="material-symbols-outlined text-primary"
-                style={{ fontSize: "20px" }}
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+              {/* SOA Badge */}
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[10px] font-bold text-primary shadow-sm"
+                title="Attestazione SOA"
               >
-                verified
-              </span>
-              <span className="text-xs font-light uppercase tracking-wider text-text-muted">
-                Qualità Certificata
-              </span>
+                SOA
+              </div>
+              {/* ISO Badge */}
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[8px] font-bold leading-tight text-primary shadow-sm"
+                title="ISO 9001:2015"
+              >
+                ISO
+                <br />
+                9001
+              </div>
+              {/* General Quality Badge */}
+              <div className="flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1">
+                <DynamicIcon
+                  name="badge_check"
+                  size={16}
+                  className="text-primary"
+                />
+                <span className="text-xs font-light uppercase tracking-wider text-text-muted">
+                  Qualità Certificata
+                </span>
+              </div>
             </div>
           </div>
 
@@ -74,7 +75,7 @@ export function Footer({ contactInfo, columns, legalLinks }: FooterProps = {}) {
                 {column.title}
               </h3>
               <ul className="space-y-3">
-                {column.links.map((link) => (
+                {column.links?.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
@@ -95,27 +96,24 @@ export function Footer({ contactInfo, columns, legalLinks }: FooterProps = {}) {
             </h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <span
-                  className="material-symbols-outlined text-primary"
-                  style={{ fontSize: "18px" }}
-                >
-                  location_on
-                </span>
+                <DynamicIcon
+                  name="location_on"
+                  size={18}
+                  className="shrink-0 text-primary"
+                />
                 <span className="text-sm font-light text-text-secondary">
-                  {contact.address?.street}
+                  {contact.address}
                   <br />
-                  {contact.address?.cap} {contact.address?.city} (
-                  {contact.address?.province})
+                  {contact.city}
                 </span>
               </li>
               {contact.phone && (
                 <li className="flex items-center gap-3">
-                  <span
-                    className="material-symbols-outlined text-primary"
-                    style={{ fontSize: "18px" }}
-                  >
-                    phone
-                  </span>
+                  <DynamicIcon
+                    name="call"
+                    size={18}
+                    className="shrink-0 text-primary"
+                  />
                   <a
                     href={`tel:${contact.phone.replace(/\s/g, "")}`}
                     className="text-sm font-light text-text-secondary transition-colors hover:text-primary"
@@ -126,12 +124,11 @@ export function Footer({ contactInfo, columns, legalLinks }: FooterProps = {}) {
               )}
               {contact.email && (
                 <li className="flex items-center gap-3">
-                  <span
-                    className="material-symbols-outlined text-primary"
-                    style={{ fontSize: "18px" }}
-                  >
-                    mail
-                  </span>
+                  <DynamicIcon
+                    name="mail"
+                    size={18}
+                    className="shrink-0 text-primary"
+                  />
                   <a
                     href={`mailto:${contact.email}`}
                     className="text-sm font-light text-text-secondary transition-colors hover:text-primary"

@@ -1,9 +1,14 @@
+import { DynamicIcon } from "@/components/ui/DynamicIcon";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
+import { LazyMap } from "@/components/ui/LazyMap";
 import type { Metadata } from "next";
 import { getContattiPageData } from "@/lib/data";
+import { ContactFormWithRecaptcha } from "./ContactFormWithRecaptcha";
+
+// ISR: Revalidate every 5 minutes for optimal caching
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Contatti | BIEMME 2 Costruzioni",
@@ -23,24 +28,40 @@ const defaultServiceOptions = [
 ];
 
 export default async function ContattiPage() {
-  const { contactInfo, services, header, footer } = await getContattiPageData();
+  const { page, header, footer } = await getContattiPageData();
 
-  // Build service options from CMS services or use default
+  // Get contact info from page global
+  const contactInfo = page.contactInfo;
+  const formServices = page.formSection?.servizi;
+
+  // Build service options from CMS or use default
+  // Filter out "altro" from CMS data to avoid duplicates, then add it at the end
   const serviceOptions =
-    services && services.length > 0
+    formServices && formServices.length > 0
       ? [
           { value: "", label: "Seleziona un servizio" },
-          ...services.map((s) => ({ value: s.slug, label: s.title })),
+          ...formServices
+            .filter((s: { value: string }) => s.value !== "altro")
+            .map((s: { label: string; value: string }) => ({
+              value: s.value,
+              label: s.label,
+            })),
           { value: "altro", label: "Altro" },
         ]
       : defaultServiceOptions;
 
   // Build contact items from CMS data
+  // contactInfo now has flat structure: address, city, phone, email, pec, vatNumber
+  const addressLine =
+    contactInfo?.address && contactInfo?.city
+      ? `${contactInfo.address}, ${contactInfo.city}`
+      : "Via Cavalier Quarto Agliardi, 18, 24050 Morengo (BG)";
+
   const contactItems = [
     {
       icon: "location_on",
       title: "Sede Principale",
-      content: `${contactInfo?.address?.street ?? "Via Agliardi Cavaliere Quarto, 18"}, ${contactInfo?.address?.cap ?? "24050"} ${contactInfo?.address?.city ?? "Morengo"} (${contactInfo?.address?.province ?? "BG"})`,
+      content: addressLine,
       isLink: false,
     },
     {
@@ -60,256 +81,155 @@ export default async function ContattiPage() {
     },
   ];
 
+  // Hero Section data
+  const heroBadge = page.hero?.badge ?? "Parla con noi";
+  const heroTitle = page.hero?.title ?? "Resta in Contatto";
+  const heroDescription =
+    page.hero?.description ??
+    "Compila il form per richiedere informazioni o un preventivo gratuito. Ti ricontatteremo al più presto.";
+
+  // Google Maps embed URL from CMS or fallback
+  const mapSection = page.mapSection;
   const mapEmbedUrl =
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2791.8!2d9.6892!3d45.5393!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4781538f8aaaaaab%3A0x1234567890abcdef!2sVia%20Agliardi%20Cavaliere%20Quarto%2C%2018%2C%2024050%20Morengo%20BG!5e0!3m2!1sit!2sit!4v1703600000000!5m2!1sit!2sit";
+    mapSection?.embedUrl ??
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2792.7!2d9.6883!3d45.5397!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4781526c3a8eea3b%3A0x89a7e1e8d0e4f0c0!2sVia%20Bergamo%2C%2035%2C%2024050%20Morengo%20BG!5e0!3m2!1sit!2sit!4v1704000000000!5m2!1sit!2sit";
+  const mapTitle = mapSection?.title ?? "Dove Siamo";
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
 
-      <main className="mx-auto flex w-full max-w-7xl flex-grow flex-col px-4 py-8 md:px-10 md:py-16">
-        {/* Main Split Section */}
-        <div className="grid gap-12 lg:grid-cols-2 xl:gap-20">
-          {/* Left Column: Contact Info */}
-          <div className="flex flex-col gap-10">
-            <div className="space-y-4">
-              <span className="text-sm font-light uppercase tracking-widest text-primary">
-                Parla con noi
-              </span>
-              <h1 className="text-5xl font-light leading-[1.1] tracking-tight text-text-primary md:text-6xl">
-                Resta in
-                <br />
-                <span className="text-text-secondary">Contatto.</span>
-              </h1>
-              <p className="mt-4 max-w-md text-lg font-light leading-relaxed text-text-secondary">
-                Compila il seguente form per richiedere informazioni o un
-                preventivo gratuito. Sarai ricontattato dal nostro ufficio
-                commerciale. Grazie.
-              </p>
-            </div>
+      {/* Hero Section with gradient background */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-primary py-20 md:py-28">
+        {/* Decorative elements */}
+        <div className="pointer-events-none absolute inset-0">
+          <div
+            className="absolute inset-0 opacity-10"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px),
+                               linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)`,
+              backgroundSize: "40px 40px",
+            }}
+          />
+          <div className="absolute -bottom-20 -right-20 h-80 w-80 rounded-full bg-white/5" />
+          <DynamicIcon
+            name="mail"
+            size={144}
+            className="absolute left-10 top-10 text-white/10"
+          />
+        </div>
 
-            <div className="mt-4 space-y-8">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
+          <span className="mb-4 inline-block text-sm font-light uppercase tracking-widest text-white/80">
+            {heroBadge}
+          </span>
+          <h1 className="text-4xl font-light leading-tight text-white md:text-5xl lg:text-6xl">
+            {heroTitle}
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-lg font-light text-white/80">
+            {heroDescription}
+          </p>
+        </div>
+      </section>
+
+      <main className="flex-grow bg-neutral-50">
+        {/* Contact Cards + Form Section */}
+        <div className="mx-auto max-w-7xl px-4 py-16 md:px-10">
+          <div className="grid gap-10 lg:grid-cols-5 lg:gap-16">
+            {/* Left Column: Contact Info Cards */}
+            <div className="space-y-6 lg:col-span-2">
+              <h2 className="mb-8 text-2xl font-light text-text-primary">
+                I nostri recapiti
+              </h2>
+
               {contactItems.map((item) => (
-                <div key={item.title} className="group flex items-start gap-5">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-primary-muted text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white">
-                    <span
-                      className="material-symbols-outlined"
-                      style={{ fontSize: "24px" }}
-                    >
-                      {item.icon}
-                    </span>
+                <div
+                  key={item.title}
+                  className="group flex items-center gap-5 rounded-2xl border border-neutral-100 bg-white p-4 transition-all duration-300 hover:border-primary/20 hover:shadow-md"
+                >
+                  <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary/20 bg-primary/5 text-primary transition-all duration-300 group-hover:border-primary/40 group-hover:bg-primary/10">
+                    <DynamicIcon name={item.icon} size={24} />
                   </div>
-                  <div>
-                    <h3 className="mb-1 text-lg font-medium text-text-primary">
+                  <div className="flex-1">
+                    <h3 className="mb-0.5 text-xs font-semibold uppercase tracking-wider text-text-muted">
                       {item.title}
                     </h3>
-                    <div className="font-light leading-relaxed text-text-secondary">
-                      {item.isLink && item.href ? (
-                        <a
-                          href={item.href}
-                          className="text-lg font-light text-text-secondary transition-colors hover:text-text-primary"
-                        >
-                          {item.content}
-                        </a>
-                      ) : (
-                        <span>{item.content}</span>
-                      )}
-                      {item.subtext && (
-                        <p className="mt-1 text-sm text-text-muted">
-                          {item.subtext}
-                        </p>
-                      )}
-                    </div>
+                    {item.isLink && item.href ? (
+                      <a
+                        href={item.href}
+                        className="text-base font-medium text-text-primary transition-colors hover:text-primary"
+                      >
+                        {item.content}
+                      </a>
+                    ) : (
+                      <span className="text-sm leading-snug text-text-primary">
+                        {item.content}
+                      </span>
+                    )}
+                    {item.subtext && (
+                      <p className="mt-0.5 text-xs text-text-muted">
+                        {item.subtext}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
-            </div>
 
-            {/* Social Icons */}
-            <div className="mt-auto border-t border-border pt-8">
-              <p className="mb-4 text-sm font-light uppercase tracking-wider text-text-muted">
-                Seguici su
-              </p>
-              <div className="flex gap-4">
+              {/* Quick action buttons */}
+              <div className="flex gap-3 pt-4">
                 <a
-                  href="#"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-text-muted transition-all duration-300 hover:border-primary hover:text-primary"
+                  href={`tel:${(contactInfo?.phone ?? "+39 0363 958310").replace(/\s/g, "")}`}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-dark"
                 >
-                  <span className="text-sm font-medium">Fb</span>
+                  <DynamicIcon name="call" size={20} />
+                  Chiama Ora
                 </a>
                 <a
-                  href="#"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-text-muted transition-all duration-300 hover:border-primary hover:text-primary"
+                  href={`mailto:${contactInfo?.email ?? "info@biemme2.com"}`}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-primary bg-white px-4 py-3 text-sm font-medium text-primary transition-colors hover:bg-primary/5"
                 >
-                  <span className="text-sm font-medium">Ig</span>
-                </a>
-                <a
-                  href="#"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-text-muted transition-all duration-300 hover:border-primary hover:text-primary"
-                >
-                  <span className="text-sm font-medium">In</span>
+                  <DynamicIcon name="mail" size={20} />
+                  Scrivi Email
                 </a>
               </div>
             </div>
+
+            {/* Right Column: Form */}
+            <Card
+              id="form"
+              className="relative overflow-hidden border-neutral-200 bg-white p-6 shadow-lg lg:col-span-3 md:p-8 lg:p-10"
+            >
+              {/* Decorative accent */}
+              <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-primary via-primary-dark to-primary" />
+
+              <CardContent>
+                <h3 className="mb-2 text-2xl font-medium text-text-primary">
+                  Inviaci un messaggio
+                </h3>
+                <p className="mb-6 text-sm text-text-muted">
+                  Compila tutti i campi obbligatori (*) e ti risponderemo entro
+                  24 ore.
+                </p>
+
+                <ContactFormWithRecaptcha serviceOptions={serviceOptions} />
+              </CardContent>
+            </Card>
           </div>
-
-          {/* Right Column: Form */}
-          <Card
-            id="form"
-            className="relative overflow-hidden p-6 md:p-8 lg:p-10"
-          >
-            {/* Decorative background accent */}
-            <div className="pointer-events-none absolute right-0 top-0 h-32 w-32 rounded-full bg-primary/5 blur-[80px]" />
-
-            <CardContent>
-              <h3 className="mb-6 text-2xl font-light text-text-primary">
-                Inviaci un messaggio
-              </h3>
-
-              <form className="space-y-5">
-                <div className="grid gap-5 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="name"
-                      className="ml-1 text-sm font-light text-text-secondary"
-                    >
-                      Nome Completo
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      placeholder="Mario Rossi"
-                      className="w-full rounded-lg border border-border bg-surface-elevated px-4 py-3.5 font-light text-text-primary placeholder:text-text-muted/50 transition-all focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="phone"
-                      className="ml-1 text-sm font-light text-text-secondary"
-                    >
-                      Telefono
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      placeholder="+39 333 ..."
-                      className="w-full rounded-lg border border-border bg-surface-elevated px-4 py-3.5 font-light text-text-primary placeholder:text-text-muted/50 transition-all focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label
-                    htmlFor="email"
-                    className="ml-1 text-sm font-light text-text-secondary"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    placeholder="mario@esempio.it"
-                    className="w-full rounded-lg border border-border bg-surface-elevated px-4 py-3.5 font-light text-text-primary placeholder:text-text-muted/50 transition-all focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label
-                    htmlFor="service"
-                    className="ml-1 text-sm font-light text-text-secondary"
-                  >
-                    Tipo di Lavoro
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="service"
-                      defaultValue=""
-                      className="w-full cursor-pointer appearance-none rounded-lg border border-border bg-surface-elevated px-4 py-3.5 font-light text-text-primary transition-all focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                    >
-                      {serviceOptions.map((option) => (
-                        <option
-                          key={option.value}
-                          value={option.value}
-                          disabled={option.value === ""}
-                        >
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-text-muted">
-                      <span className="material-symbols-outlined">
-                        expand_more
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label
-                    htmlFor="message"
-                    className="ml-1 text-sm font-light text-text-secondary"
-                  >
-                    Messaggio
-                  </label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    placeholder="Descrivi brevemente il tuo progetto..."
-                    className="w-full resize-none rounded-lg border border-border bg-surface-elevated px-4 py-3.5 font-light text-text-primary placeholder:text-text-muted/50 transition-all focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                  />
-                </div>
-
-                <div className="pt-2">
-                  <Button
-                    type="submit"
-                    variant="gradient"
-                    size="lg"
-                    className="w-full"
-                  >
-                    Invia Richiesta
-                    <span className="material-symbols-outlined transition-transform group-hover:translate-x-1">
-                      arrow_forward
-                    </span>
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
         </div>
 
         {/* Map Section */}
-        <div className="mt-20 overflow-hidden rounded-2xl border border-border">
-          <div className="relative">
-            {/* Section Header */}
-            <div className="bg-surface px-6 py-4 border-b border-border">
-              <h2 className="text-xl font-light text-text-primary flex items-center gap-2">
-                <span
-                  className="material-symbols-outlined text-primary"
-                  style={{ fontSize: "24px" }}
-                >
-                  location_on
-                </span>
-                Dove Siamo
+        <div className="border-t border-neutral-200 bg-white">
+          <div className="mx-auto max-w-7xl px-4 py-12 md:px-10">
+            <div className="mb-8 text-center">
+              <h2 className="text-2xl font-light text-text-primary">
+                {mapTitle}
               </h2>
-              <p className="mt-1 text-sm font-light text-text-secondary">
-                {contactInfo?.address?.street ??
-                  "Via Agliardi Cavaliere Quarto, 18"}{" "}
-                | {contactInfo?.address?.cap ?? "24050"}{" "}
-                {contactInfo?.address?.city ?? "Morengo"} (
-                {contactInfo?.address?.province ?? "BG"})
-              </p>
+              <p className="mt-2 text-text-secondary">{addressLine}</p>
             </div>
 
-            {/* Google Maps Embed */}
-            <iframe
-              src={mapEmbedUrl}
-              width="100%"
-              height="450"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
+            <LazyMap
+              embedUrl={mapEmbedUrl}
               title="Sede BIEMME 2 - Morengo (BG)"
-              className="w-full"
+              height={400}
             />
           </div>
         </div>

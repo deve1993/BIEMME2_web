@@ -2,28 +2,73 @@
  * Contatti Page Data Fetching
  */
 
-import { getServices, getFooter, getHeader } from "@/lib/payload";
-import { fallbackContactInfo, fallbackServices } from "@/lib/fallback-data";
-import type { Service, ContactInfo, Header, Footer } from "@/types/payload";
+import { getContattiPage, getHeader, getFooter } from "@/lib/payload";
+import {
+  fallbackContattiPage,
+  fallbackHeader,
+  fallbackFooter,
+} from "@/lib/fallback-data";
+import type { ContattiPage, Header, Footer } from "@/types/payload";
 
 export interface ContattiPageData {
-  contactInfo: ContactInfo;
-  services: Service[];
-  header: Header | null;
-  footer: Footer | null;
+  page: ContattiPage;
+  header: Header;
+  footer: Footer;
+}
+
+/**
+ * Helper to get array or fallback if empty
+ */
+function getArrayOrFallback<T>(
+  arr: T[] | undefined | null,
+  fallbackArr: T[],
+): T[] {
+  return arr && arr.length > 0 ? arr : fallbackArr;
+}
+
+/**
+ * Merge CMS data with fallback, using fallback for empty arrays
+ */
+function mergeContattiPageData(
+  cmsData: ContattiPage | null,
+  fallback: ContattiPage,
+): ContattiPage {
+  if (!cmsData) return fallback;
+
+  const servizi = getArrayOrFallback(
+    cmsData.formSection?.servizi,
+    fallback.formSection?.servizi ?? [],
+  );
+
+  return {
+    ...fallback,
+    ...cmsData,
+    contactInfo: {
+      ...fallback.contactInfo,
+      ...cmsData.contactInfo,
+    },
+    formSection: {
+      ...fallback.formSection,
+      ...cmsData.formSection,
+      servizi,
+    },
+    mapSection: {
+      ...fallback.mapSection,
+      ...cmsData.mapSection,
+    },
+  };
 }
 
 export async function getContattiPageData(): Promise<ContattiPageData> {
-  const [servicesResult, footer, header] = await Promise.all([
-    getServices({ active: true }).catch(() => null),
-    getFooter().catch(() => null),
+  const [pageResult, headerResult, footerResult] = await Promise.all([
+    getContattiPage().catch(() => null),
     getHeader().catch(() => null),
+    getFooter().catch(() => null),
   ]);
 
   return {
-    contactInfo: footer?.contactInfo ?? fallbackContactInfo,
-    services: servicesResult ?? fallbackServices,
-    header,
-    footer,
+    page: mergeContattiPageData(pageResult, fallbackContattiPage),
+    header: headerResult ?? fallbackHeader,
+    footer: footerResult ?? fallbackFooter,
   };
 }

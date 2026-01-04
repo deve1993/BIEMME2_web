@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Payload CMS media uploads (local dev only)
+/media
+
+# Source images (originals before optimization)
+src/app/(site)/img/
+
+# Windows artifacts
+nul

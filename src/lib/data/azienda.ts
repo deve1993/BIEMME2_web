@@ -2,61 +2,101 @@
  * Azienda Page Data Fetching
  */
 
+import { getAziendaPage, getHeader, getFooter } from "@/lib/payload";
 import {
-  getTimeline,
-  getValues,
-  getTeamMembers,
-  getCertifications,
-  getHeader,
-  getFooter,
-} from "@/lib/payload";
-import {
-  fallbackTimeline,
-  fallbackValues,
-  fallbackTeam,
-  fallbackCertifications,
+  fallbackAziendaPage,
+  fallbackHeader,
+  fallbackFooter,
 } from "@/lib/fallback-data";
-import type {
-  Timeline,
-  Value,
-  TeamMember,
-  Certification,
-  Header,
-  Footer,
-} from "@/types/payload";
+import type { AziendaPage, Header, Footer } from "@/types/payload";
 
 export interface AziendaPageData {
-  timeline: Timeline[];
-  values: Value[];
-  team: TeamMember[];
-  certifications: Certification[];
-  header: Header | null;
-  footer: Footer | null;
+  page: AziendaPage;
+  header: Header;
+  footer: Footer;
+}
+
+/**
+ * Helper to get array or fallback if empty
+ */
+function getArrayOrFallback<T>(
+  arr: T[] | undefined | null,
+  fallbackArr: T[],
+): T[] {
+  return arr && arr.length > 0 ? arr : fallbackArr;
+}
+
+/**
+ * Merge CMS data with fallback, using fallback for empty arrays
+ */
+function mergeAziendaPageData(
+  cmsData: AziendaPage | null,
+  fallback: AziendaPage,
+): AziendaPage {
+  if (!cmsData) return fallback;
+
+  const timeline = getArrayOrFallback(
+    cmsData.storiaSection?.timeline,
+    fallback.storiaSection?.timeline ?? [],
+  );
+  const values = getArrayOrFallback(
+    cmsData.valoriSection?.values,
+    fallback.valoriSection?.values ?? [],
+  );
+  const aree = getArrayOrFallback(
+    cmsData.organigrammaSection?.aree,
+    fallback.organigrammaSection?.aree ?? [],
+  );
+  const members = getArrayOrFallback(
+    cmsData.teamSection?.members,
+    fallback.teamSection?.members ?? [],
+  );
+  const certifications = getArrayOrFallback(
+    cmsData.certificazioniSection?.certifications,
+    fallback.certificazioniSection?.certifications ?? [],
+  );
+
+  return {
+    ...fallback,
+    ...cmsData,
+    storiaSection: {
+      ...fallback.storiaSection,
+      ...cmsData.storiaSection,
+      timeline,
+    },
+    valoriSection: {
+      ...fallback.valoriSection,
+      ...cmsData.valoriSection,
+      values,
+    },
+    organigrammaSection: {
+      ...fallback.organigrammaSection,
+      ...cmsData.organigrammaSection,
+      aree,
+    },
+    teamSection: {
+      ...fallback.teamSection,
+      ...cmsData.teamSection,
+      members,
+    },
+    certificazioniSection: {
+      ...fallback.certificazioniSection,
+      ...cmsData.certificazioniSection,
+      certifications,
+    },
+  };
 }
 
 export async function getAziendaPageData(): Promise<AziendaPageData> {
-  const [
-    timelineResult,
-    valuesResult,
-    teamResult,
-    certificationsResult,
-    header,
-    footer,
-  ] = await Promise.all([
-    getTimeline({ active: true }).catch(() => null),
-    getValues({ active: true }).catch(() => null),
-    getTeamMembers({ active: true }).catch(() => null),
-    getCertifications({ active: true }).catch(() => null),
+  const [pageResult, headerResult, footerResult] = await Promise.all([
+    getAziendaPage().catch(() => null),
     getHeader().catch(() => null),
     getFooter().catch(() => null),
   ]);
 
   return {
-    timeline: timelineResult ?? fallbackTimeline,
-    values: valuesResult ?? fallbackValues,
-    team: teamResult ?? fallbackTeam,
-    certifications: certificationsResult ?? fallbackCertifications,
-    header,
-    footer,
+    page: mergeAziendaPageData(pageResult, fallbackAziendaPage),
+    header: headerResult ?? fallbackHeader,
+    footer: footerResult ?? fallbackFooter,
   };
 }

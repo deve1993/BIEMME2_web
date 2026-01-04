@@ -7,8 +7,8 @@
 
 :root {
   /* Primary Colors */
-  --primary-start: #2c0f12;
-  --primary-end: #6b1e23;
+  --primary-start: #6b1e23;
+  --primary-end: #8b2b31;
   --primary: #4a1a1e;
   --primary-hover: #8b2b31;
   --primary-muted: rgba(74, 26, 30, 0.2);
@@ -62,8 +62,19 @@
 }
 
 /* Base Styles - Only apply to site, not admin */
-html {
-  scroll-behavior: smooth;
+/* Fix blue glow artifact on html, body, site-wrapper */
+html,
+body,
+.site-wrapper {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Smooth scroll solo per chi non ha problemi di movimento */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* Site-specific body styles */
@@ -94,6 +105,11 @@ html {
   color: white;
 }
 
+/* Hide reCAPTCHA badge - disclosure text is shown in the form */
+.grecaptcha-badge {
+  visibility: hidden !important;
+}
+
 /* Custom Scrollbar - site only */
 .site-wrapper::-webkit-scrollbar {
   width: 8px;
@@ -120,12 +136,20 @@ html {
   background-clip: text;
 }
 
-/* Gradient Border Utility */
+/* Gradient Border Utility - Ottimizzato con border-image */
 .gradient-border {
-  position: relative;
+  border: 1px solid transparent;
+  border-image: var(--gradient-primary-horizontal) 1;
+  border-radius: 0; /* border-image non supporta border-radius */
 }
 
-.gradient-border::before {
+/* Versione con rounded corners (usa pseudo-elemento solo quando necessario) */
+.gradient-border-rounded {
+  position: relative;
+  background: var(--background);
+}
+
+.gradient-border-rounded::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -144,10 +168,14 @@ html {
 .btn-gradient {
   background: var(--gradient-primary);
   color: white;
-  transition: all 0.3s ease;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
-.btn-gradient:hover {
+.btn-gradient:hover,
+.btn-gradient:focus-visible {
   background: var(--gradient-primary-reverse);
   transform: translateY(-1px);
   box-shadow: 0 4px 20px rgba(74, 26, 30, 0.3);
@@ -165,4 +193,35 @@ html {
     background-color 0.3s ease,
     color 0.3s ease,
     border-color 0.3s ease;
+}
+
+/* Performance: DISABILITA transizioni su mobile per TBT = 0 */
+@media (max-width: 768px) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    transition-delay: 0ms !important;
+    animation-duration: 0ms !important;
+    animation-delay: 0ms !important;
+  }
+}
+
+/* Focus-within fallback per effetti hover su tastiera/touch */
+.group:focus-within [class*="group-hover:scale"],
+.group:focus-within [class*="group-hover:grayscale"] {
+  --tw-scale-x: 1.1;
+  --tw-scale-y: 1.1;
+  filter: grayscale(0);
+}
+
+/* Rispetta preferenze utente per movimento ridotto */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

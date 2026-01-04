@@ -1,52 +1,17 @@
 /**
- * CMS Seed Script
+ * CMS Seed Script - Local API Version
  *
- * This script populates the Payload CMS with initial data from the existing
- * hardcoded content in the website.
+ * This script populates the Payload CMS with initial data using the Local API.
+ * No HTTP requests - direct database access.
  *
  * Usage:
  *   npx tsx scripts/seed-cms.ts
  *
- * Make sure your CMS is running at the URL specified in CMS_URL
- * and the tenant slug is correctly set in TENANT_SLUG.
+ * Make sure MongoDB is running and MONGODB_URI is set in .env.local
  */
 
-import "dotenv/config";
-
-const CMS_URL = process.env.CMS_URL ?? "http://localhost:3000";
-const TENANT_SLUG = process.env.TENANT_SLUG ?? "biemme2";
-
-// Headers for authenticated requests
-const headers = {
-  "Content-Type": "application/json",
-  "x-tenant-slug": TENANT_SLUG,
-};
-
-async function postToCMS<T>(
-  endpoint: string,
-  data: Record<string, unknown>,
-): Promise<T | null> {
-  try {
-    const response = await fetch(`${CMS_URL}/api${endpoint}`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      const text = await response.text();
-      console.error(`Error creating ${endpoint}:`, response.status, text);
-      return null;
-    }
-
-    const result = await response.json();
-    console.log(`Created ${endpoint}:`, result.doc?.id ?? result.id);
-    return result.doc ?? result;
-  } catch (error) {
-    console.error(`Failed to create ${endpoint}:`, error);
-    return null;
-  }
-}
+import { getPayload } from "payload";
+import config from "../payload.config";
 
 // ============================================================================
 // SEED DATA - Extracted from existing pages
@@ -109,19 +74,19 @@ const stats = [
 const highlights = [
   {
     title: "Appassionati",
-    subtitle: "Amiamo ciò che costruiamo.",
+    description: "Amiamo ciò che costruiamo.",
     order: 1,
     active: true,
   },
   {
     title: "Onesti e Trasparenti",
-    subtitle: "Chiarezza in ogni preventivo.",
+    description: "Chiarezza in ogni preventivo.",
     order: 2,
     active: true,
   },
   {
     title: "Sempre Disponibili",
-    subtitle: "Il tuo partner di fiducia.",
+    description: "Il tuo partner di fiducia.",
     order: 3,
     active: true,
   },
@@ -131,9 +96,9 @@ const projects = [
   {
     title: "Polo Logistico Verona",
     slug: "polo-logistico-verona",
-    excerpt:
+    description:
       "Realizzazione di una struttura logistica di 5000mq con tecniche di prefabbricazione avanzata.",
-    category: "Industriale",
+    category: "industriale" as const,
     order: 1,
     featured: true,
     active: true,
@@ -141,19 +106,19 @@ const projects = [
   {
     title: 'Complesso "Le Terrazze"',
     slug: "complesso-le-terrazze",
-    excerpt:
+    description:
       "Complesso residenziale di lusso classe A4, con finiture di pregio e domotica integrata.",
-    category: "Residenziale",
+    category: "residenziale" as const,
     order: 2,
     featured: true,
     active: true,
   },
   {
-    title: "Viadotto Nord",
-    slug: "viadotto-nord",
-    excerpt:
-      "Manutenzione straordinaria e rinforzo strutturale dei piloni portanti.",
-    category: "Infrastrutture",
+    title: "Restauro Palazzo Storico",
+    slug: "restauro-palazzo-storico",
+    description:
+      "Restauro conservativo di palazzo del XVII secolo con tecniche tradizionali.",
+    category: "restauro" as const,
     order: 3,
     featured: true,
     active: true,
@@ -161,9 +126,9 @@ const projects = [
   {
     title: "Uffici Direzionali",
     slug: "uffici-direzionali",
-    excerpt:
+    description:
       "Riqualificazione completa di 1200mq di uffici con soluzioni open space moderne.",
-    category: "Ristrutturazioni",
+    category: "ristrutturazione" as const,
     order: 4,
     featured: true,
     active: true,
@@ -230,23 +195,37 @@ const values = [
 const team = [
   {
     name: "Geom. Paolo Pini",
-    role: "Direzione Tecnica e Lavori",
-    bio: "Responsabile della gestione operativa dei cantieri e del coordinamento tecnico. Garantisce che ogni progetto sia eseguito a regola d'arte.",
+    role: "Geometra",
+    bio: "Direzione Lavori\npini@biemme2.com\n3478881791",
     order: 1,
     active: true,
   },
   {
     name: "Sabrina Bove",
-    role: "Amministrazione e Contabilità",
-    bio: "Gestione amministrativa e contabile. Il punto di riferimento per la trasparenza fiscale e la gestione burocratica delle commesse.",
+    role: "Amministrazione",
+    bio: "Impiegata amministrativa\namministrazione@biemme2.com",
     order: 2,
     active: true,
   },
   {
-    name: "Squadre Operative",
-    role: "Maestranze Specializzate",
-    bio: "Operai e tecnici specializzati con anni di esperienza diretta in cantiere, formati per operare con i nostri macchinari avanzati.",
+    name: "Ketty Pozzoni",
+    role: "Amministrazione",
+    bio: "info@biemme2.com",
     order: 3,
+    active: true,
+  },
+  {
+    name: "Giuseppe Sonzogni",
+    role: "Geometra",
+    bio: "Direzione lavori\nsonzogni@biemme2.com\n3486855615",
+    order: 4,
+    active: true,
+  },
+  {
+    name: "Giovanni Berta",
+    role: "Commerciale",
+    bio: "berta@biemme2.com\n3478881790",
+    order: 5,
     active: true,
   },
 ];
@@ -278,52 +257,48 @@ const services = [
   {
     title: "Edilizia Residenziale",
     slug: "edilizia-residenziale",
-    excerpt:
+    description:
       "Dalla progettazione alla consegna chiavi in mano. Realizziamo complessi residenziali moderni con un focus assoluto su efficienza energetica, materiali premium e design sostenibile.",
     icon: "home_work",
     features: [
-      { title: "Certificazioni energetiche Classe A" },
-      { title: "Finiture di alto pregio" },
-      { title: "Gestione completa del cantiere" },
+      { text: "Certificazioni energetiche Classe A" },
+      { text: "Finiture di alto pregio" },
+      { text: "Gestione completa del cantiere" },
     ],
     order: 1,
-    featured: true,
     active: true,
   },
   {
     title: "Edilizia Industriale",
     slug: "edilizia-industriale",
-    excerpt:
+    description:
       "Strutture in acciaio, capannoni logistici e impianti produttivi. Garantiamo rapidità di esecuzione e massima affidabilità strutturale per supportare la crescita del tuo business.",
     icon: "factory",
     order: 2,
-    featured: true,
     active: true,
   },
   {
     title: "Scavi e Movimento Terra",
     slug: "scavi-movimento-terra",
-    excerpt:
+    description:
       "Preparazione del terreno, sbancamenti e fondazioni. Il nostro parco macchine avanzato ci permette di operare su qualsiasi terreno con precisione millimetrica e in totale sicurezza.",
     icon: "landscape",
     order: 3,
-    featured: true,
     active: true,
   },
   {
     title: "Pronto Intervento H24",
     slug: "pronto-intervento",
-    excerpt:
+    description:
       "Servizio di emergenza attivo 24 ore su 24, festivi inclusi. Interveniamo tempestivamente per rotture tubazioni, ingorghi, cedimenti strutturali e messe in sicurezza urgenti.",
     icon: "emergency_home",
     features: [
-      { title: "Reperibilità 24/7" },
-      { title: "Intervento immediato" },
-      { title: "Riparazione guasti idrici" },
-      { title: "Puntellazioni urgenti" },
+      { text: "Reperibilità 24/7" },
+      { text: "Intervento immediato" },
+      { text: "Riparazione guasti idrici" },
+      { text: "Puntellazioni urgenti" },
     ],
     order: 4,
-    featured: true,
     active: true,
   },
 ];
@@ -395,7 +370,6 @@ const machinery = [
     name: "Manitou MRT 2150",
     description:
       "Sollevatore telescopico rotativo per movimentazione carichi e lavorazioni in quota ad alta precisione.",
-    icon: "agriculture",
     order: 1,
     active: true,
   },
@@ -403,7 +377,6 @@ const machinery = [
     name: "Volvo FM370 & Autogrù",
     description:
       "Autocarro pesante con gru integrata per trasporto materiali e posizionamento in cantiere.",
-    icon: "local_shipping",
     order: 2,
     active: true,
   },
@@ -411,7 +384,6 @@ const machinery = [
     name: "Volvo ECR 58",
     description:
       "Escavatore compatto cingolato, ideale per scavi di fondazione e lavori in spazi ristretti.",
-    icon: "construction",
     order: 3,
     active: true,
   },
@@ -419,11 +391,78 @@ const machinery = [
     name: "Komatsu PC 14R",
     description:
       "Miniescavatore ultra-compatto per ristrutturazioni e interventi di precisione.",
-    icon: "handyman",
     order: 4,
     active: true,
   },
 ];
+
+const headerData = {
+  logo: {
+    alt: "BIEMME 2",
+  },
+  navigation: [
+    { label: "Home", href: "/" },
+    { label: "Azienda", href: "/azienda" },
+    { label: "Servizi", href: "/servizi" },
+    { label: "Pronto Intervento", href: "/pronto-intervento" },
+    { label: "Contatti", href: "/contatti" },
+  ],
+  cta: {
+    label: "Contattaci",
+    href: "/contatti",
+    phone: "+39 0363 88288",
+  },
+};
+
+const footerData = {
+  companyInfo: {
+    name: "BIEMME 2 S.r.l.",
+    description:
+      "Da oltre 30 anni costruiamo qualità nel territorio bergamasco. Edilizia residenziale, industriale, restauro e ristrutturazioni.",
+  },
+  contact: {
+    address: "Via Bergamo, 35/37",
+    city: "24050 Morengo (BG)",
+    phone: "+39 0363 88288",
+    email: "info@biemme2.com",
+    vatNumber: "P.IVA 02481290165",
+  },
+  columns: [
+    {
+      title: "Servizi",
+      links: [
+        {
+          label: "Edilizia Residenziale",
+          href: "/servizi/edilizia-residenziale",
+        },
+        {
+          label: "Edilizia Industriale",
+          href: "/servizi/edilizia-industriale",
+        },
+        {
+          label: "Scavi e Movimento Terra",
+          href: "/servizi/scavi-movimento-terra",
+        },
+        { label: "Pronto Intervento", href: "/servizi/pronto-intervento" },
+      ],
+    },
+    {
+      title: "Azienda",
+      links: [
+        { label: "Chi Siamo", href: "/azienda" },
+        { label: "Pronto Intervento", href: "/pronto-intervento" },
+        { label: "Contatti", href: "/contatti" },
+      ],
+    },
+  ],
+  legal: {
+    copyright: "BIEMME 2 S.r.l. Tutti i diritti riservati.",
+    links: [
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Cookie Policy", href: "/cookie" },
+    ],
+  },
+};
 
 // ============================================================================
 // SEED FUNCTION
@@ -431,87 +470,102 @@ const machinery = [
 
 async function seedCMS() {
   console.log("=".repeat(60));
-  console.log("Starting CMS Seed...");
-  console.log(`CMS URL: ${CMS_URL}`);
-  console.log(`Tenant: ${TENANT_SLUG}`);
+  console.log("Starting CMS Seed with Local API...");
   console.log("=".repeat(60));
 
-  // Seed Features
-  console.log("\n--- Seeding Features ---");
-  for (const feature of features) {
-    await postToCMS("/features", feature);
+  const payload = await getPayload({ config });
+
+  // Helper function to create documents
+  async function seedCollection<T extends Record<string, unknown>>(
+    collectionSlug: string,
+    data: T[],
+  ) {
+    console.log(`\n--- Seeding ${collectionSlug} ---`);
+    for (const item of data) {
+      try {
+        const result = await payload.create({
+          collection: collectionSlug as never,
+          data: item as never,
+        });
+        console.log(`Created ${collectionSlug}:`, result.id);
+      } catch (error) {
+        console.error(`Error creating ${collectionSlug}:`, error);
+      }
+    }
   }
 
-  // Seed Stats
-  console.log("\n--- Seeding Stats ---");
-  for (const stat of stats) {
-    await postToCMS("/stats", stat);
+  // Seed all collections
+  await seedCollection("features", features);
+  await seedCollection("stats", stats);
+  await seedCollection("highlights", highlights);
+  await seedCollection("projects", projects);
+  await seedCollection("timeline", timeline);
+  await seedCollection("values", values);
+  await seedCollection("team-members", team);
+  await seedCollection("certifications", certifications);
+  await seedCollection("services", services);
+  await seedCollection("pillars", pillars);
+  await seedCollection("benefits", benefits);
+  await seedCollection("machinery", machinery);
+
+  // Seed globals
+  console.log("\n--- Seeding Header Global ---");
+  try {
+    await payload.updateGlobal({
+      slug: "header",
+      data: headerData as never,
+    });
+    console.log("Header global updated");
+  } catch (error) {
+    console.error("Error updating header:", error);
   }
 
-  // Seed Highlights
-  console.log("\n--- Seeding Highlights ---");
-  for (const highlight of highlights) {
-    await postToCMS("/highlights", highlight);
+  console.log("\n--- Seeding Footer Global ---");
+  try {
+    await payload.updateGlobal({
+      slug: "footer",
+      data: footerData as never,
+    });
+    console.log("Footer global updated");
+  } catch (error) {
+    console.error("Error updating footer:", error);
   }
 
-  // Seed Projects
-  console.log("\n--- Seeding Projects ---");
-  for (const project of projects) {
-    await postToCMS("/projects", project);
-  }
+  // Create admin user if not exists
+  console.log("\n--- Creating Admin User ---");
+  try {
+    const existingUsers = await payload.find({
+      collection: "users",
+      where: { email: { equals: "admin@biemme2.com" } },
+    });
 
-  // Seed Timeline
-  console.log("\n--- Seeding Timeline ---");
-  for (const item of timeline) {
-    await postToCMS("/timeline", item);
-  }
-
-  // Seed Values
-  console.log("\n--- Seeding Values ---");
-  for (const value of values) {
-    await postToCMS("/values", value);
-  }
-
-  // Seed Team
-  console.log("\n--- Seeding Team Members ---");
-  for (const member of team) {
-    await postToCMS("/team-members", member);
-  }
-
-  // Seed Certifications
-  console.log("\n--- Seeding Certifications ---");
-  for (const cert of certifications) {
-    await postToCMS("/certifications", cert);
-  }
-
-  // Seed Services
-  console.log("\n--- Seeding Services ---");
-  for (const service of services) {
-    await postToCMS("/services", service);
-  }
-
-  // Seed Pillars
-  console.log("\n--- Seeding Pillars ---");
-  for (const pillar of pillars) {
-    await postToCMS("/pillars", pillar);
-  }
-
-  // Seed Benefits
-  console.log("\n--- Seeding Benefits ---");
-  for (const benefit of benefits) {
-    await postToCMS("/benefits", benefit);
-  }
-
-  // Seed Machinery
-  console.log("\n--- Seeding Machinery ---");
-  for (const machine of machinery) {
-    await postToCMS("/machinery", machine);
+    if (existingUsers.docs.length === 0) {
+      await payload.create({
+        collection: "users",
+        data: {
+          email: "admin@biemme2.com",
+          password: "Admin123!",
+          name: "Admin",
+          role: "admin",
+        },
+      });
+      console.log("Admin user created: admin@biemme2.com / Admin123!");
+    } else {
+      console.log("Admin user already exists");
+    }
+  } catch (error) {
+    console.error("Error creating admin user:", error);
   }
 
   console.log("\n" + "=".repeat(60));
   console.log("CMS Seed Complete!");
   console.log("=".repeat(60));
+
+  process.exit(0);
 }
 
 // Run the seed
-seedCMS().catch(console.error);
+seedCMS().catch((error) => {
+  console.error("Seed failed:", error);
+  process.exit(1);
+});

@@ -31,7 +31,10 @@ export function SectionTitle({
         {title}
       </h2>
       {description && (
-        <p className="mt-4 max-w-2xl text-lg font-light text-text-secondary">
+        <p
+          className={`mt-4 max-w-2xl text-lg font-light text-text-secondary ${centered ? 'mx-auto text-balance' : ''
+            }`}
+        >
           {description}
         </p>
       )}
