@@ -85,6 +85,20 @@ function mergeHomePageData(
   };
 }
 
+/**
+ * Merge footer data - always use fallback columns (until CMS is properly seeded)
+ */
+function mergeFooterData(cmsData: Footer | null, fallback: Footer): Footer {
+  if (!cmsData) return fallback;
+
+  return {
+    ...fallback,
+    ...cmsData,
+    // Always use fallback columns - they are curated and don't have broken links
+    columns: fallback.columns ?? [],
+  };
+}
+
 export async function getHomePageData(): Promise<HomePageData> {
   const [pageResult, headerResult, footerResult] = await Promise.all([
     getHomePage().catch(() => null),
@@ -95,6 +109,6 @@ export async function getHomePageData(): Promise<HomePageData> {
   return {
     page: mergeHomePageData(pageResult, fallbackHomePage),
     header: headerResult ?? fallbackHeader,
-    footer: footerResult ?? fallbackFooter,
+    footer: mergeFooterData(footerResult, fallbackFooter),
   };
 }

@@ -1,7 +1,13 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { HeroSlider } from "@/components/ui/HeroSlider";
+import dynamic from "next/dynamic";
 import { getHomePageData } from "@/lib/data";
+
+// Dynamic import per evitare conflitti con estensioni browser
+const HeroSlider = dynamic(
+  () => import("@/components/ui/HeroSlider").then((mod) => mod.HeroSlider),
+  { ssr: true },
+);
 import { DynamicIcon } from "@/components/ui/DynamicIcon";
 import { Button } from "@/components/ui/Button";
 import { SectionTitle } from "@/components/ui/SectionTitle";
@@ -59,17 +65,19 @@ export default async function HomePage() {
   const contactInfo = footer?.contact;
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col" suppressHydrationWarning>
       <Header navItems={headerNavItems} cta={headerCta} />
 
-      <main className="flex-1">
+      <main className="flex-1" suppressHydrationWarning>
         {/* Hero Slider - 3 foto rotanti con testi */}
-        <HeroSlider
-          badge={page.heroSlider?.badge}
-          slides={page.heroSlider?.slides}
-          secondaryCta={page.heroSlider?.secondaryCta}
-          autoplayInterval={page.heroSlider?.autoplayInterval ?? 8000}
-        />
+        <div suppressHydrationWarning>
+          <HeroSlider
+            badge={page.heroSlider?.badge}
+            slides={page.heroSlider?.slides}
+            secondaryCta={page.heroSlider?.secondaryCta}
+            autoplayInterval={page.heroSlider?.autoplayInterval ?? 8000}
+          />
+        </div>
 
         {/* Features Section */}
         <section className="bg-background py-20 transition-theme">

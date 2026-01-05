@@ -1,10 +1,48 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  Component,
+  type ReactNode,
+} from "react";
 import Image from "next/image";
 import { DynamicIcon } from "./DynamicIcon";
 import { Button } from "./Button";
 import type { HeroSlide, Media } from "@/types/payload";
+
+// Error Boundary per catturare errori da estensioni browser
+class HeroErrorBoundary extends Component<
+  { children: ReactNode; fallback: ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode; fallback: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    // Ignora errori da estensioni browser
+    if (error.stack?.includes("chrome-extension://")) {
+      this.setState({ hasError: false });
+      return;
+    }
+    console.error("HeroSlider error:", error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
 
 interface HeroSliderProps {
   badge?: string;
@@ -76,7 +114,34 @@ function getImageUrl(slide: HeroSlide, slideIndex: number = 0): string {
   return DEFAULT_IMAGES[fallbackIndex].desktop;
 }
 
-export function HeroSlider({
+// Fallback statico per quando c'è un errore
+function HeroFallback() {
+  return (
+    <section className="relative aspect-[4/3] min-h-[400px] w-full overflow-hidden bg-primary sm:aspect-[16/10] sm:min-h-[450px] md:aspect-[16/9] md:min-h-[500px] lg:h-[750px] lg:min-h-[750px]">
+      <div className="absolute inset-0">
+        <Image
+          src="/img/hero-1-opt.webp"
+          alt="BIEMME 2 - Costruzioni"
+          fill
+          priority
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
+      <div className="relative z-10 mx-auto flex h-full max-w-7xl items-center px-6 lg:px-8">
+        <div className="max-w-3xl">
+          <h1 className="text-4xl font-light uppercase text-white sm:text-5xl md:text-7xl">
+            Costruzioni <br />
+            <span className="font-normal">INDUSTRIALI</span>
+          </h1>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Componente interno con la logica dello slider
+function HeroSliderInner({
   badge = "Dal 1990",
   slides: propSlides,
   secondaryCta,
@@ -112,7 +177,10 @@ export function HeroSlider({
   const slide = slides[currentSlide];
 
   return (
-    <section className="relative aspect-[4/3] min-h-[400px] w-full overflow-hidden sm:aspect-[16/10] sm:min-h-[450px] md:aspect-[16/9] md:min-h-[500px] lg:h-[750px] lg:min-h-[750px]">
+    <section
+      className="relative aspect-[4/3] min-h-[400px] w-full overflow-hidden sm:aspect-[16/10] sm:min-h-[450px] md:aspect-[16/9] md:min-h-[500px] lg:h-[750px] lg:min-h-[750px]"
+      suppressHydrationWarning
+    >
       {/* Background Image - picture element per responsive mobile/desktop */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 z-10 bg-black/40" />
@@ -234,5 +302,14 @@ export function HeroSlider({
         style={{ background: "var(--gradient-primary-horizontal)" }}
       />
     </section>
+  );
+}
+
+// Componente esportato con Error Boundary
+export function HeroSlider(props: HeroSliderProps) {
+  return (
+    <HeroErrorBoundary fallback={<HeroFallback />}>
+      <HeroSliderInner {...props} />
+    </HeroErrorBoundary>
   );
 }

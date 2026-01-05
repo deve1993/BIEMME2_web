@@ -653,20 +653,11 @@ export const fallbackFooter: Footer = {
   },
   columns: [
     {
-      title: "Servizi",
-      links: [
-        { label: "Edilizia Residenziale", href: "/servizi#residenziale" },
-        { label: "Edilizia Industriale", href: "/servizi#industriale" },
-        { label: "Scavi e Movimento Terra", href: "/servizi#scavi" },
-        { label: "Pronto Intervento", href: "/pronto-intervento" },
-      ],
-    },
-    {
       title: "Azienda",
       links: [
         { label: "Chi Siamo", href: "/azienda" },
-        { label: "Il Team", href: "/azienda#team" },
-        { label: "Certificazioni", href: "/azienda#certificazioni" },
+        { label: "Pronto Intervento", href: "/pronto-intervento" },
+        { label: "Contatti", href: "/contatti" },
       ],
     },
   ],

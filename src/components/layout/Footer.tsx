@@ -26,124 +26,104 @@ export function Footer({ contactInfo, columns, legalLinks }: FooterProps = {}) {
   const legal = legalLinks ?? fallbackFooter.legal?.links ?? [];
   const currentYear = new Date().getFullYear();
 
+  // Flatten all links from columns for the centered layout
+  const allLinks = footerColumns.flatMap((col) => col.links ?? []);
+
   return (
     <footer className="border-t border-border bg-surface transition-theme">
-      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
-          {/* Brand Column */}
-          <div className="lg:col-span-1">
-            <Logo />
-            <p className="mt-4 text-sm font-light leading-relaxed text-text-secondary">
-              Da oltre 30 anni ci occupiamo di costruzioni. Il nostro know-how
-              ci permette di fornire soluzioni chiavi in mano.
-            </p>
-            <div className="mt-6 flex flex-wrap items-center gap-4">
-              {/* SOA Badge */}
-              <div
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[10px] font-bold text-primary shadow-sm"
-                title="Attestazione SOA"
-              >
-                SOA
-              </div>
-              {/* ISO Badge */}
-              <div
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[8px] font-bold leading-tight text-primary shadow-sm"
-                title="ISO 9001:2015"
-              >
-                ISO
-                <br />
-                9001
-              </div>
-              {/* General Quality Badge */}
-              <div className="flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1">
-                <DynamicIcon
-                  name="badge_check"
-                  size={16}
-                  className="text-primary"
-                />
-                <span className="text-xs font-light uppercase tracking-wider text-text-muted">
-                  Qualità Certificata
-                </span>
-              </div>
-            </div>
-          </div>
+      <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
+        {/* Centered Logo & Description */}
+        <div className="flex flex-col items-center text-center">
+          <Logo />
+          <p className="mt-4 max-w-md text-sm font-light leading-relaxed text-text-secondary">
+            Da oltre 30 anni ci occupiamo di costruzioni. Il nostro know-how ci
+            permette di fornire soluzioni chiavi in mano.
+          </p>
+        </div>
 
-          {/* Dynamic Columns from CMS */}
-          {footerColumns.map((column) => (
-            <div key={column.title}>
-              <h3 className="mb-4 text-sm font-medium uppercase tracking-wider text-text-primary">
-                {column.title}
-              </h3>
-              <ul className="space-y-3">
-                {column.links?.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-sm font-light text-text-secondary transition-colors hover:text-primary"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+        {/* Divider */}
+        <div className="my-8 h-px w-full bg-border" />
+
+        {/* Navigation Links - Centered Row */}
+        <nav className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
+          {allLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm font-light text-text-secondary transition-colors hover:text-primary"
+            >
+              {link.label}
+            </Link>
           ))}
+        </nav>
 
-          {/* Contact Info */}
-          <div>
-            <h3 className="mb-4 text-sm font-medium uppercase tracking-wider text-text-primary">
-              Contatti
-            </h3>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <DynamicIcon
-                  name="location_on"
-                  size={18}
-                  className="shrink-0 text-primary"
-                />
-                <span className="text-sm font-light text-text-secondary">
-                  {contact.address}
-                  <br />
-                  {contact.city}
-                </span>
-              </li>
-              {contact.phone && (
-                <li className="flex items-center gap-3">
-                  <DynamicIcon
-                    name="call"
-                    size={18}
-                    className="shrink-0 text-primary"
-                  />
-                  <a
-                    href={`tel:${contact.phone.replace(/\s/g, "")}`}
-                    className="text-sm font-light text-text-secondary transition-colors hover:text-primary"
-                  >
-                    {contact.phone}
-                  </a>
-                </li>
-              )}
-              {contact.email && (
-                <li className="flex items-center gap-3">
-                  <DynamicIcon
-                    name="mail"
-                    size={18}
-                    className="shrink-0 text-primary"
-                  />
-                  <a
-                    href={`mailto:${contact.email}`}
-                    className="text-sm font-light text-text-secondary transition-colors hover:text-primary"
-                  >
-                    {contact.email}
-                  </a>
-                </li>
-              )}
-            </ul>
+        {/* Divider */}
+        <div className="my-8 h-px w-full bg-border" />
+
+        {/* Contact Info - Centered Row */}
+        <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-light text-text-secondary md:gap-6">
+          <span className="flex items-center gap-2">
+            <DynamicIcon
+              name="location_on"
+              size={16}
+              className="text-primary"
+            />
+            {contact.address}, {contact.city}
+          </span>
+          <span className="hidden text-border md:inline">•</span>
+          {contact.phone && (
+            <>
+              <a
+                href={`tel:${contact.phone.replace(/\s/g, "")}`}
+                className="flex items-center gap-2 transition-colors hover:text-primary"
+              >
+                <DynamicIcon name="call" size={16} className="text-primary" />
+                {contact.phone}
+              </a>
+              <span className="hidden text-border md:inline">•</span>
+            </>
+          )}
+          {contact.email && (
+            <a
+              href={`mailto:${contact.email}`}
+              className="flex items-center gap-2 transition-colors hover:text-primary"
+            >
+              <DynamicIcon name="mail" size={16} className="text-primary" />
+              {contact.email}
+            </a>
+          )}
+        </div>
+
+        {/* Certifications - Centered Row */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          {/* SOA Badge */}
+          <div
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[9px] font-bold text-primary shadow-sm"
+            title="Attestazione SOA"
+          >
+            SOA
+          </div>
+          {/* ISO Badge */}
+          <div
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[7px] font-bold leading-tight text-primary shadow-sm"
+            title="ISO 9001:2015"
+          >
+            ISO
+            <br />
+            9001
+          </div>
+          {/* Quality Badge */}
+          <div className="flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5">
+            <DynamicIcon name="verified" size={14} className="text-primary" />
+            <span className="text-xs font-light uppercase tracking-wider text-text-muted">
+              Qualità Certificata
+            </span>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 md:flex-row">
-          <p className="text-xs font-light text-text-muted text-center md:text-left">
+        <div className="mt-10 flex flex-col items-center justify-center gap-4 border-t border-border pt-6 md:flex-row md:justify-between">
+          <p className="text-xs font-light text-text-muted">
             © {currentYear} BIEMME 2 S.r.l. - P.IVA/C.F. 01998580164 - Tutti i
             diritti riservati
           </p>

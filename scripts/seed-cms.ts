@@ -525,24 +525,6 @@ const footerData = {
   },
   columns: [
     {
-      title: "Servizi",
-      links: [
-        {
-          label: "Edilizia Residenziale",
-          href: "/servizi/edilizia-residenziale",
-        },
-        {
-          label: "Edilizia Industriale",
-          href: "/servizi/edilizia-industriale",
-        },
-        {
-          label: "Scavi e Movimento Terra",
-          href: "/servizi/scavi-movimento-terra",
-        },
-        { label: "Pronto Intervento", href: "/servizi/pronto-intervento" },
-      ],
-    },
-    {
       title: "Azienda",
       links: [
         { label: "Chi Siamo", href: "/azienda" },
