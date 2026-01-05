@@ -5,6 +5,7 @@ import {
 } from "@/components/analytics/AnalyticsServer";
 import { JsonLd } from "@/components/seo";
 import { LazyLivePreview } from "@/components/providers/LazyLivePreview";
+import { CookieConsent } from "@/components/ui/CookieConsent";
 
 /*
   Site Layout - Extends root layout with site-specific content.
@@ -85,6 +86,9 @@ export default function SiteLayout({
       <LazyLivePreview />
 
       <div className="site-wrapper">{children}</div>
+
+      {/* Cookie Consent Modal - GDPR compliant */}
+      <CookieConsent />
     </>
   );
 }

@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { DynamicIcon } from "@/components/ui/DynamicIcon";
 import { Logo } from "./Logo";
 import { fallbackFooter } from "@/lib/fallback-data";
+import { openCookieSettings } from "@/components/ui/CookieConsent";
 
 export interface FooterProps {
   contactInfo?: {
@@ -137,6 +140,13 @@ export function Footer({ contactInfo, columns, legalLinks }: FooterProps = {}) {
                 {link.label}
               </Link>
             ))}
+            <button
+              type="button"
+              onClick={openCookieSettings}
+              className="text-xs font-light text-text-muted transition-colors hover:text-primary"
+            >
+              Gestione Cookie
+            </button>
           </div>
         </div>
       </div>
