@@ -195,8 +195,8 @@ function HeroSliderInner({
             fill
             priority
             fetchPriority="high"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1920px"
-            quality={75}
+            sizes="(max-width: 1023px) 100vw, 1920px"
+            quality={90}
             className="object-cover"
           />
         ) : (
@@ -206,8 +206,8 @@ function HeroSliderInner({
             alt={`${slide.title} ${slide.subtitle}`}
             fill
             loading="lazy"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1920px"
-            quality={75}
+            sizes="(max-width: 1023px) 100vw, 1920px"
+            quality={90}
             className="object-cover"
           />
         )}
