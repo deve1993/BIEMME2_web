@@ -1,17 +1,23 @@
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import dynamic from "next/dynamic";
 import { getHomePageData } from "@/lib/data";
-
-// Dynamic import per evitare conflitti con estensioni browser
-const HeroSlider = dynamic(
-  () => import("@/components/ui/HeroSlider").then((mod) => mod.HeroSlider),
-  { ssr: true },
-);
 import { DynamicIcon } from "@/components/ui/DynamicIcon";
 import { Button } from "@/components/ui/Button";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Card, CardContent } from "@/components/ui/Card";
+
+// Dynamic imports per Client Components - risolve errori Webpack in Next.js 15
+const Header = dynamic(
+  () => import("@/components/layout/Header").then((mod) => mod.Header),
+  { ssr: true },
+);
+const Footer = dynamic(
+  () => import("@/components/layout/Footer").then((mod) => mod.Footer),
+  { ssr: true },
+);
+const HeroSlider = dynamic(
+  () => import("@/components/ui/HeroSlider").then((mod) => mod.HeroSlider),
+  { ssr: true },
+);
 
 // ISR: rigenera ogni 60 secondi (compatibile con Live Preview)
 export const revalidate = 60;
@@ -129,8 +135,14 @@ export default async function HomePage() {
               {highlights.map((highlight, index) => (
                 <div
                   key={index}
-                  className={`text-center ${index === 1 ? "md:border-x md:border-border/50" : ""}`}
+                  className={`flex flex-col items-center text-center ${index === 1 ? "md:border-x md:border-border/50" : ""}`}
                 >
+                  {/* Icon */}
+                  {highlight.icon && (
+                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-muted text-primary">
+                      <DynamicIcon name={highlight.icon} size={28} />
+                    </div>
+                  )}
                   <h4 className="text-xl font-light uppercase text-primary">
                     {highlight.title}
                   </h4>

@@ -199,7 +199,7 @@ export interface ContactInfo {
   vatNumber?: string;
 }
 
-export interface Header {
+export interface HeaderData {
   logo?: {
     image?: Media;
     alt?: string;
@@ -219,6 +219,9 @@ export interface Header {
     phone?: string;
   };
 }
+
+/** @deprecated Use HeaderData instead to avoid conflicts with React component */
+export type Header = HeaderData;
 
 export interface Footer {
   companyInfo?: {
@@ -596,6 +599,7 @@ export interface HomePage {
     highlights?: {
       title: string;
       subtitle?: string;
+      icon?: string;
     }[];
   };
   ctaSection?: {

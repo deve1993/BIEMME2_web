@@ -10,7 +10,7 @@ import type {
   AziendaPage,
   ContattiPage,
   ProntoInterventoPage,
-  Header,
+  HeaderData,
   Footer,
 } from "@/types/payload";
 
@@ -95,12 +95,21 @@ export const fallbackHomePage: HomePage = {
   },
   highlightsSection: {
     highlights: [
-      { title: "Appassionati", subtitle: "Amiamo ciò che costruiamo." },
+      {
+        title: "Appassionati",
+        subtitle: "Amiamo ciò che costruiamo.",
+        icon: "gem",
+      },
       {
         title: "Onesti e Trasparenti",
         subtitle: "Chiarezza in ogni preventivo.",
+        icon: "shield",
       },
-      { title: "Sempre Disponibili", subtitle: "Il tuo partner di fiducia." },
+      {
+        title: "Sempre Disponibili",
+        subtitle: "Il tuo partner di fiducia.",
+        icon: "users",
+      },
     ],
   },
   ctaSection: {
@@ -620,7 +629,7 @@ export const fallbackProntoInterventoPage: ProntoInterventoPage = {
 // Header/Footer Fallback Data
 // ============================================================================
 
-export const fallbackHeader: Header = {
+export const fallbackHeader: HeaderData = {
   logo: {
     alt: "BIEMME 2",
   },

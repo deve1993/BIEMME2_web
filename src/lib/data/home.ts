@@ -8,11 +8,11 @@ import {
   fallbackHeader,
   fallbackFooter,
 } from "@/lib/fallback-data";
-import type { HomePage, Header, Footer } from "@/types/payload";
+import type { HomePage, HeaderData, Footer } from "@/types/payload";
 
 export interface HomePageData {
   page: HomePage;
-  header: Header;
+  header: HeaderData;
   footer: Footer;
 }
 

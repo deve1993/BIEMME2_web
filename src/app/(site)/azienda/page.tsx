@@ -88,13 +88,13 @@ export default async function AziendaPage() {
           </div>
 
           <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
-            <span className="mb-4 inline-block text-sm font-light uppercase tracking-widest text-white/80">
+            <span className="mb-4 inline-block text-sm font-medium uppercase tracking-widest text-white/90">
               {heroBadge}
             </span>
-            <h1 className="text-4xl font-light leading-tight text-white md:text-5xl lg:text-6xl">
+            <h1 className="text-4xl font-medium leading-tight text-white drop-shadow-sm md:text-5xl lg:text-6xl">
               {heroTitle}
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg font-light text-white/80">
+            <p className="mx-auto mt-6 max-w-2xl text-lg font-light leading-relaxed text-white/90">
               {heroDescription}
             </p>
           </div>

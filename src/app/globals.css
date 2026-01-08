@@ -11,6 +11,7 @@
   --primary-end: #8b2b31;
   --primary: #4a1a1e;
   --primary-hover: #8b2b31;
+  --primary-dark: #2d0f12;
   --primary-muted: rgba(74, 26, 30, 0.2);
 
   /* Gradients */
@@ -56,6 +57,7 @@
   --color-primary-start: var(--primary-start);
   --color-primary-end: var(--primary-end);
   --color-primary-hover: var(--primary-hover);
+  --color-primary-dark: var(--primary-dark);
   --color-primary-muted: var(--primary-muted);
   --font-display: "Space Grotesk", sans-serif;
   --font-body: "Space Grotesk", sans-serif;

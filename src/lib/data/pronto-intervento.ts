@@ -8,11 +8,11 @@ import {
   fallbackHeader,
   fallbackFooter,
 } from "@/lib/fallback-data";
-import type { ProntoInterventoPage, Header, Footer } from "@/types/payload";
+import type { ProntoInterventoPage, HeaderData, Footer } from "@/types/payload";
 
 export interface ProntoInterventoPageData {
   page: ProntoInterventoPage;
-  header: Header;
+  header: HeaderData;
   footer: Footer;
 }
 

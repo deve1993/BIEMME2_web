@@ -8,11 +8,11 @@ import {
   fallbackHeader,
   fallbackFooter,
 } from "@/lib/fallback-data";
-import type { ContattiPage, Header, Footer } from "@/types/payload";
+import type { ContattiPage, HeaderData, Footer } from "@/types/payload";
 
 export interface ContattiPageData {
   page: ContattiPage;
-  header: Header;
+  header: HeaderData;
   footer: Footer;
 }
 

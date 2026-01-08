@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:clean": "node -e \"const fs=require('fs');['node_modules/.cache','.next'].forEach(d=>fs.rmSync(d,{recursive:true,force:true}))\" && next dev",
     "build": "next build",
+    "clean": "node -e \"const fs=require('fs');['node_modules/.cache','.next'].forEach(d=>fs.rmSync(d,{recursive:true,force:true}))\"",
     "start": "next start",
     "lint": "eslint",
     "seed": "npx tsx --env-file=.env.local scripts/seed-cms.ts",
