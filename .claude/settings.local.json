@@ -60,7 +60,9 @@
       "Bash(set:*)",
       "Bash(node scripts/optimize-secondary.mjs:*)",
       "Bash(netstat:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(file:*)",
+      "Bash(node scripts/regenerate-heroes.mjs:*)"
     ],
     "deny": [],
     "ask": []
