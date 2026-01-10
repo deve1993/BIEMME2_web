@@ -827,3 +827,64 @@ export interface ProntoInterventoPage {
     buttonLabel?: string;
   };
 }
+
+export interface PrivacyPage {
+  seo?: {
+    title?: string;
+    description?: string;
+  };
+  header?: {
+    badge?: string;
+    title?: string;
+    subtitle?: string;
+    lastUpdate?: string;
+  };
+  companyInfo?: {
+    name?: string;
+    address?: string;
+    vatNumber?: string;
+    email?: string;
+    phone?: string;
+  };
+  sections?: {
+    title: string;
+    content?: RichText;
+  }[];
+}
+
+export interface CookiePage {
+  seo?: {
+    title?: string;
+    description?: string;
+  };
+  header?: {
+    badge?: string;
+    title?: string;
+    subtitle?: string;
+    lastUpdate?: string;
+  };
+  companyInfo?: {
+    name?: string;
+    website?: string;
+    email?: string;
+  };
+  cookieTypes?: {
+    category: string;
+    description?: string;
+    requiresConsent?: boolean;
+    cookies?: {
+      name: string;
+      purpose?: string;
+      duration?: string;
+      provider?: string;
+    }[];
+  }[];
+  thirdPartyServices?: {
+    name: string;
+    privacyUrl?: string;
+  }[];
+  browserLinks?: {
+    browser: string;
+    url: string;
+  }[];
+}

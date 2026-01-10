@@ -2,97 +2,50 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getCookiePageData } from "@/lib/data";
 
-export const metadata: Metadata = {
-  title: "Cookie Policy | BIEMME 2 Costruzioni",
-  description:
-    "Informativa sui cookie utilizzati dal sito BIEMME 2 S.r.l. ai sensi del GDPR e della normativa italiana.",
-};
-
-// Company data
-const company = {
-  name: "BIEMME 2 S.r.l.",
-  website: "www.biemme2.com",
-  email: "info@biemme2.com",
-};
-
-// Cookie types
-const cookieTypes = [
-  {
-    category: "Cookie Tecnici (Necessari)",
+export async function generateMetadata(): Promise<Metadata> {
+  const { page } = await getCookiePageData();
+  return {
+    title: page.seo?.title ?? "Cookie Policy | BIEMME 2 Costruzioni",
     description:
-      "Questi cookie sono essenziali per il corretto funzionamento del sito web. Non possono essere disattivati nei nostri sistemi.",
-    consent: false,
-    cookies: [
-      {
-        name: "session_id",
-        purpose: "Gestione della sessione utente",
-        duration: "Sessione",
-        provider: "Prima parte",
-      },
-      {
-        name: "csrf_token",
-        purpose: "Protezione contro attacchi CSRF",
-        duration: "Sessione",
-        provider: "Prima parte",
-      },
-      {
-        name: "cookie_consent",
-        purpose: "Memorizza le preferenze sui cookie",
-        duration: "12 mesi",
-        provider: "Prima parte",
-      },
-    ],
-  },
-  {
-    category: "Cookie Analitici",
-    description:
-      "Questi cookie ci permettono di contare le visite e le fonti di traffico per misurare e migliorare le prestazioni del nostro sito.",
-    consent: true,
-    cookies: [
-      {
-        name: "_ga",
-        purpose: "Distingue gli utenti (Google Analytics)",
-        duration: "2 anni",
-        provider: "Google LLC",
-      },
-      {
-        name: "_ga_*",
-        purpose: "Mantiene lo stato della sessione (GA4)",
-        duration: "2 anni",
-        provider: "Google LLC",
-      },
-      {
-        name: "_gid",
-        purpose: "Distingue gli utenti",
-        duration: "24 ore",
-        provider: "Google LLC",
-      },
-    ],
-  },
-  {
-    category: "Cookie di Funzionalità",
-    description:
-      "Questi cookie permettono al sito di fornire funzionalità avanzate e personalizzazione, come la memorizzazione delle preferenze.",
-    consent: true,
-    cookies: [
-      {
-        name: "theme_preference",
-        purpose: "Memorizza la preferenza tema chiaro/scuro",
-        duration: "1 anno",
-        provider: "Prima parte",
-      },
-      {
-        name: "language",
-        purpose: "Memorizza la lingua preferita",
-        duration: "1 anno",
-        provider: "Prima parte",
-      },
-    ],
-  },
-];
+      page.seo?.description ??
+      "Informativa sui cookie utilizzati dal sito BIEMME 2 S.r.l. ai sensi del GDPR e della normativa italiana.",
+  };
+}
 
-export default function CookiePage() {
+export default async function CookiePage() {
+  const { page } = await getCookiePageData();
+
+  // Company data from CMS
+  const company = {
+    name: page.companyInfo?.name ?? "BIEMME 2 S.r.l.",
+    website: page.companyInfo?.website ?? "www.biemme2.com",
+    email: page.companyInfo?.email ?? "info@biemme2.com",
+  };
+
+  // Header data from CMS
+  const headerBadge = page.header?.badge ?? "Informativa Legale";
+  const headerTitle = page.header?.title ?? "Cookie Policy";
+  const headerSubtitle =
+    page.header?.subtitle ??
+    "Informativa sull'utilizzo dei cookie ai sensi dell'art. 13 del Regolamento UE 2016/679 (GDPR) e del Provvedimento del Garante Privacy n. 229/2014";
+  const lastUpdate = page.header?.lastUpdate
+    ? new Date(page.header.lastUpdate).toLocaleDateString("it-IT", {
+        month: "long",
+        year: "numeric",
+      })
+    : "Dicembre 2024";
+
+  // Cookie types from CMS
+  const cookieTypes = page.cookieTypes ?? [];
+
+  // Third party services from CMS
+  const thirdPartyServices = page.thirdPartyServices ?? [];
+
+  // Browser links from CMS
+  const browserLinks = page.browserLinks ?? [];
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -102,18 +55,16 @@ export default function CookiePage() {
           {/* Header */}
           <div className="mb-12 border-b border-border pb-8">
             <span className="text-sm font-light uppercase tracking-widest text-primary">
-              Informativa Legale
+              {headerBadge}
             </span>
             <h1 className="mt-2 text-4xl font-light uppercase tracking-tight text-text-primary md:text-5xl">
-              Cookie Policy
+              {headerTitle}
             </h1>
             <p className="mt-4 font-light text-text-secondary">
-              Informativa sull&apos;utilizzo dei cookie ai sensi dell&apos;art.
-              13 del Regolamento UE 2016/679 (GDPR) e del Provvedimento del
-              Garante Privacy n. 229/2014
+              {headerSubtitle}
             </p>
             <p className="mt-2 text-sm text-text-muted">
-              Ultimo aggiornamento: Dicembre 2024
+              Ultimo aggiornamento: {lastUpdate}
             </p>
           </div>
 
@@ -137,7 +88,7 @@ export default function CookiePage() {
               </p>
             </section>
 
-            {/* Section 2 */}
+            {/* Section 2 - Dynamic Cookie Types */}
             <section>
               <h2 className="mb-4 text-2xl font-medium text-text-primary">
                 2. Tipologie di Cookie Utilizzati
@@ -158,159 +109,136 @@ export default function CookiePage() {
                     </h3>
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-medium ${
-                        type.consent
+                        type.requiresConsent
                           ? "bg-primary-muted text-primary"
                           : "bg-green-100 text-green-700"
                       }`}
                     >
-                      {type.consent ? "Richiede consenso" : "Sempre attivo"}
+                      {type.requiresConsent
+                        ? "Richiede consenso"
+                        : "Sempre attivo"}
                     </span>
                   </div>
-                  <p className="mb-4 text-text-secondary">{type.description}</p>
+                  {type.description && (
+                    <p className="mb-4 text-text-secondary">
+                      {type.description}
+                    </p>
+                  )}
 
                   {/* Cookie Table */}
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-border">
-                          <th className="pb-3 text-left font-medium text-text-primary">
-                            Nome
-                          </th>
-                          <th className="pb-3 text-left font-medium text-text-primary">
-                            Finalità
-                          </th>
-                          <th className="pb-3 text-left font-medium text-text-primary">
-                            Durata
-                          </th>
-                          <th className="pb-3 text-left font-medium text-text-primary">
-                            Fornitore
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {type.cookies.map((cookie) => (
-                          <tr
-                            key={cookie.name}
-                            className="border-b border-border/50"
-                          >
-                            <td className="py-3 font-mono text-xs text-primary">
-                              {cookie.name}
-                            </td>
-                            <td className="py-3 text-text-secondary">
-                              {cookie.purpose}
-                            </td>
-                            <td className="py-3 text-text-muted">
-                              {cookie.duration}
-                            </td>
-                            <td className="py-3 text-text-muted">
-                              {cookie.provider}
-                            </td>
+                  {type.cookies && type.cookies.length > 0 && (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-border">
+                            <th className="pb-3 text-left font-medium text-text-primary">
+                              Nome
+                            </th>
+                            <th className="pb-3 text-left font-medium text-text-primary">
+                              Finalità
+                            </th>
+                            <th className="pb-3 text-left font-medium text-text-primary">
+                              Durata
+                            </th>
+                            <th className="pb-3 text-left font-medium text-text-primary">
+                              Fornitore
+                            </th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                        </thead>
+                        <tbody>
+                          {type.cookies.map((cookie) => (
+                            <tr
+                              key={cookie.name}
+                              className="border-b border-border/50"
+                            >
+                              <td className="py-3 font-mono text-xs text-primary">
+                                {cookie.name}
+                              </td>
+                              <td className="py-3 text-text-secondary">
+                                {cookie.purpose}
+                              </td>
+                              <td className="py-3 text-text-muted">
+                                {cookie.duration}
+                              </td>
+                              <td className="py-3 text-text-muted">
+                                {cookie.provider}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               ))}
             </section>
 
-            {/* Section 3 */}
-            <section>
-              <h2 className="mb-4 text-2xl font-medium text-text-primary">
-                3. Cookie di Terze Parti
-              </h2>
-              <p>
-                Alcuni cookie sono impostati da servizi di terze parti che
-                compaiono sulle nostre pagine. Non abbiamo controllo su questi
-                cookie. Per maggiori informazioni, consultare le rispettive
-                informative:
-              </p>
-              <ul className="list-disc space-y-2 pl-6">
-                <li>
-                  <strong className="text-text-primary">
-                    Google Analytics:
-                  </strong>{" "}
-                  <a
-                    href="https://policies.google.com/privacy"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    Privacy Policy di Google
-                  </a>
-                </li>
-                <li>
-                  <strong className="text-text-primary">Google Maps:</strong>{" "}
-                  <a
-                    href="https://policies.google.com/privacy"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    Privacy Policy di Google
-                  </a>
-                </li>
-              </ul>
-            </section>
+            {/* Section 3 - Third Party Services */}
+            {thirdPartyServices.length > 0 && (
+              <section>
+                <h2 className="mb-4 text-2xl font-medium text-text-primary">
+                  3. Cookie di Terze Parti
+                </h2>
+                <p>
+                  Alcuni cookie sono impostati da servizi di terze parti che
+                  compaiono sulle nostre pagine. Non abbiamo controllo su questi
+                  cookie. Per maggiori informazioni, consultare le rispettive
+                  informative:
+                </p>
+                <ul className="list-disc space-y-2 pl-6">
+                  {thirdPartyServices.map((service) => (
+                    <li key={service.name}>
+                      <strong className="text-text-primary">
+                        {service.name}:
+                      </strong>{" "}
+                      {service.privacyUrl && (
+                        <a
+                          href={service.privacyUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline"
+                        >
+                          Privacy Policy
+                        </a>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
-            {/* Section 4 */}
-            <section>
-              <h2 className="mb-4 text-2xl font-medium text-text-primary">
-                4. Gestione dei Cookie
-              </h2>
-              <p>
-                L&apos;utente può gestire le proprie preferenze relative ai
-                cookie attraverso le funzionalità presenti nel proprio browser.
-                Di seguito i link alle guide dei principali browser:
-              </p>
-              <ul className="list-disc space-y-2 pl-6">
-                <li>
-                  <a
-                    href="https://support.google.com/chrome/answer/95647"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    Google Chrome
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://support.mozilla.org/it/kb/Attivare%20e%20disattivare%20i%20cookie"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    Mozilla Firefox
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://support.apple.com/it-it/guide/safari/sfri11471/mac"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    Apple Safari
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://support.microsoft.com/it-it/microsoft-edge/eliminare-i-cookie-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    Microsoft Edge
-                  </a>
-                </li>
-              </ul>
-              <p className="mt-4">
-                <strong className="text-text-primary">Nota:</strong> La
-                disattivazione dei cookie tecnici potrebbe compromettere il
-                corretto funzionamento di alcune parti del sito.
-              </p>
-            </section>
+            {/* Section 4 - Browser Management */}
+            {browserLinks.length > 0 && (
+              <section>
+                <h2 className="mb-4 text-2xl font-medium text-text-primary">
+                  4. Gestione dei Cookie
+                </h2>
+                <p>
+                  L&apos;utente può gestire le proprie preferenze relative ai
+                  cookie attraverso le funzionalità presenti nel proprio
+                  browser. Di seguito i link alle guide dei principali browser:
+                </p>
+                <ul className="list-disc space-y-2 pl-6">
+                  {browserLinks.map((link) => (
+                    <li key={link.browser}>
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        {link.browser}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-4">
+                  <strong className="text-text-primary">Nota:</strong> La
+                  disattivazione dei cookie tecnici potrebbe compromettere il
+                  corretto funzionamento di alcune parti del sito.
+                </p>
+              </section>
+            )}
 
             {/* Section 5 */}
             <section>

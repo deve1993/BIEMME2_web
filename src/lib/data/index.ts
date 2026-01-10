@@ -11,3 +11,5 @@ export {
   getProntoInterventoPageData,
   type ProntoInterventoPageData,
 } from "./pronto-intervento";
+export { getPrivacyPageData, type PrivacyPageData } from "./privacy";
+export { getCookiePageData, type CookiePageData } from "./cookie";

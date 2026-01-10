@@ -14,6 +14,8 @@ import type {
   AziendaPage,
   ContattiPage,
   ProntoInterventoPage,
+  PrivacyPage,
+  CookiePage,
 } from "@/types/payload";
 
 // ============================================================================
@@ -193,6 +195,38 @@ export async function getProntoInterventoPage(): Promise<ProntoInterventoPage | 
       depth: 2,
     });
     return result as ProntoInterventoPage;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Get privacy page global
+ */
+export async function getPrivacyPage(): Promise<PrivacyPage | null> {
+  try {
+    const payload = await getPayloadClient();
+    const result = await payload.findGlobal({
+      slug: "privacy-page",
+      depth: 2,
+    });
+    return result as PrivacyPage;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Get cookie page global
+ */
+export async function getCookiePage(): Promise<CookiePage | null> {
+  try {
+    const payload = await getPayloadClient();
+    const result = await payload.findGlobal({
+      slug: "cookie-page",
+      depth: 2,
+    });
+    return result as CookiePage;
   } catch {
     return null;
   }

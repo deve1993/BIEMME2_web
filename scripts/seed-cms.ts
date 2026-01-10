@@ -10,8 +10,80 @@
  * Make sure MongoDB is running and MONGODB_URI is set in .env.local
  */
 
+// Load environment variables from .env.local BEFORE any other imports
+import "dotenv/config";
+import * as dotenv from "dotenv";
+import * as path from "path";
+import { fileURLToPath } from "url";
+
+// Ensure .env.local is loaded
+dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
+
+// Debug: verify MongoDB URI is loaded
+const MONGODB_URI = process.env.MONGODB_URI;
+console.log("MongoDB URI:", MONGODB_URI?.substring(0, 50) + "...");
+
+if (!MONGODB_URI || MONGODB_URI.includes("localhost")) {
+  console.error("ERROR: MongoDB URI not properly loaded from .env.local");
+  console.error(
+    "Please ensure .env.local contains MONGODB_URI with MongoDB Atlas connection string",
+  );
+  process.exit(1);
+}
+
 import { getPayload } from "payload";
-import config from "../payload.config";
+import { buildConfig } from "payload";
+import { mongooseAdapter } from "@payloadcms/db-mongodb";
+import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import sharp from "sharp";
+
+// Import collections and globals
+import { Media } from "../src/collections/Media";
+import { Users } from "../src/collections/Users";
+import { Header } from "../src/globals/Header";
+import { Footer } from "../src/globals/Footer";
+import { HomePage } from "../src/globals/HomePage";
+import { ServiziPage } from "../src/globals/ServiziPage";
+import { AziendaPage } from "../src/globals/AziendaPage";
+import { ContattiPage } from "../src/globals/ContattiPage";
+import { ProntoInterventoPage } from "../src/globals/ProntoInterventoPage";
+import { PrivacyPage } from "../src/globals/PrivacyPage";
+import { CookiePage } from "../src/globals/CookiePage";
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+
+// Build config with explicit MongoDB URI (no fallback to localhost)
+const config = buildConfig({
+  admin: {
+    user: "users",
+  },
+  collections: [Media, Users],
+  globals: [
+    Header,
+    Footer,
+    HomePage,
+    ServiziPage,
+    AziendaPage,
+    ContattiPage,
+    ProntoInterventoPage,
+    PrivacyPage,
+    CookiePage,
+  ],
+  editor: lexicalEditor(),
+  secret: process.env.PAYLOAD_SECRET || "seed-script-secret",
+  db: mongooseAdapter({
+    url: MONGODB_URI, // Use the pre-loaded value, not process.env
+    connectOptions: {
+      serverSelectionTimeoutMS: 30000, // 30 seconds for Atlas
+      connectTimeoutMS: 30000,
+    },
+  }),
+  typescript: {
+    outputFile: path.resolve(dirname, "../src/types/payload-types.ts"),
+  },
+  sharp,
+});
 
 // ============================================================================
 // SEED DATA - Extracted from existing pages
@@ -542,6 +614,153 @@ const footerData = {
   },
 };
 
+// Privacy Page Global Data
+const privacyPageData = {
+  seo: {
+    title: "Privacy Policy | BIEMME 2 Costruzioni",
+    description:
+      "Informativa sulla privacy di BIEMME 2 S.r.l. ai sensi del GDPR (Regolamento UE 2016/679).",
+  },
+  header: {
+    badge: "Informativa Legale",
+    title: "Privacy Policy",
+    subtitle:
+      "Informativa sul trattamento dei dati personali ai sensi del Regolamento UE 2016/679 (GDPR)",
+    lastUpdate: "2024-12-01",
+  },
+  companyInfo: {
+    name: "BIEMME 2 S.r.l.",
+    address: "Via Agliardi Cavaliere Quarto, 18 - 24050 Morengo (BG)",
+    vatNumber: "01998580164",
+    email: "info@biemme2.com",
+    phone: "+39 0363 958310",
+  },
+  sections: [],
+};
+
+// Cookie Page Global Data
+const cookiePageData = {
+  seo: {
+    title: "Cookie Policy | BIEMME 2 Costruzioni",
+    description:
+      "Informativa sui cookie utilizzati dal sito BIEMME 2 S.r.l. ai sensi del GDPR e della normativa italiana.",
+  },
+  header: {
+    badge: "Informativa Legale",
+    title: "Cookie Policy",
+    subtitle:
+      "Informativa sull'utilizzo dei cookie ai sensi dell'art. 13 del Regolamento UE 2016/679 (GDPR) e del Provvedimento del Garante Privacy n. 229/2014",
+    lastUpdate: "2024-12-01",
+  },
+  companyInfo: {
+    name: "BIEMME 2 S.r.l.",
+    website: "www.biemme2.com",
+    email: "info@biemme2.com",
+  },
+  cookieTypes: [
+    {
+      category: "Cookie Tecnici (Necessari)",
+      description:
+        "Questi cookie sono essenziali per il corretto funzionamento del sito web. Non possono essere disattivati nei nostri sistemi.",
+      requiresConsent: false,
+      cookies: [
+        {
+          name: "session_id",
+          purpose: "Gestione della sessione utente",
+          duration: "Sessione",
+          provider: "Prima parte",
+        },
+        {
+          name: "csrf_token",
+          purpose: "Protezione contro attacchi CSRF",
+          duration: "Sessione",
+          provider: "Prima parte",
+        },
+        {
+          name: "cookie_consent",
+          purpose: "Memorizza le preferenze sui cookie",
+          duration: "12 mesi",
+          provider: "Prima parte",
+        },
+      ],
+    },
+    {
+      category: "Cookie Analitici",
+      description:
+        "Questi cookie ci permettono di contare le visite e le fonti di traffico per misurare e migliorare le prestazioni del nostro sito.",
+      requiresConsent: true,
+      cookies: [
+        {
+          name: "_ga",
+          purpose: "Distingue gli utenti (Google Analytics)",
+          duration: "2 anni",
+          provider: "Google LLC",
+        },
+        {
+          name: "_ga_*",
+          purpose: "Mantiene lo stato della sessione (GA4)",
+          duration: "2 anni",
+          provider: "Google LLC",
+        },
+        {
+          name: "_gid",
+          purpose: "Distingue gli utenti",
+          duration: "24 ore",
+          provider: "Google LLC",
+        },
+      ],
+    },
+    {
+      category: "Cookie di Funzionalità",
+      description:
+        "Questi cookie permettono al sito di fornire funzionalità avanzate e personalizzazione, come la memorizzazione delle preferenze.",
+      requiresConsent: true,
+      cookies: [
+        {
+          name: "theme_preference",
+          purpose: "Memorizza la preferenza tema chiaro/scuro",
+          duration: "1 anno",
+          provider: "Prima parte",
+        },
+        {
+          name: "language",
+          purpose: "Memorizza la lingua preferita",
+          duration: "1 anno",
+          provider: "Prima parte",
+        },
+      ],
+    },
+  ],
+  thirdPartyServices: [
+    {
+      name: "Google Analytics",
+      privacyUrl: "https://policies.google.com/privacy",
+    },
+    {
+      name: "Google Maps",
+      privacyUrl: "https://policies.google.com/privacy",
+    },
+  ],
+  browserLinks: [
+    {
+      browser: "Google Chrome",
+      url: "https://support.google.com/chrome/answer/95647",
+    },
+    {
+      browser: "Mozilla Firefox",
+      url: "https://support.mozilla.org/it/kb/Attivare%20e%20disattivare%20i%20cookie",
+    },
+    {
+      browser: "Apple Safari",
+      url: "https://support.apple.com/it-it/guide/safari/sfri11471/mac",
+    },
+    {
+      browser: "Microsoft Edge",
+      url: "https://support.microsoft.com/it-it/microsoft-edge/eliminare-i-cookie-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09",
+    },
+  ],
+};
+
 // ============================================================================
 // SEED FUNCTION
 // ============================================================================
@@ -572,19 +791,9 @@ async function seedCMS() {
     }
   }
 
-  // Seed all collections
-  await seedCollection("features", features);
-  await seedCollection("stats", stats);
-  await seedCollection("highlights", highlights);
-  await seedCollection("projects", projects);
-  await seedCollection("timeline", timeline);
-  await seedCollection("values", values);
-  await seedCollection("team-members", team);
-  await seedCollection("certifications", certifications);
-  await seedCollection("services", services);
-  await seedCollection("pillars", pillars);
-  await seedCollection("benefits", benefits);
-  await seedCollection("machinery", machinery);
+  // Note: Collections like features, stats, highlights, etc. are no longer used
+  // as all data is now stored in Globals. Keeping the seedCollection helper
+  // for potential future use.
 
   // Seed globals
   console.log("\n--- Seeding HomePage Global ---");
@@ -618,6 +827,30 @@ async function seedCMS() {
     console.log("Footer global updated");
   } catch (error) {
     console.error("Error updating footer:", error);
+  }
+
+  console.log("\n--- Seeding Privacy Page Global ---");
+  try {
+    await payload.updateGlobal({
+      slug: "privacy-page",
+      data: privacyPageData as never,
+    });
+    console.log("Privacy Page global updated");
+  } catch (error) {
+    console.error("Error updating privacy-page:", error);
+  }
+
+  console.log("\n--- Seeding Cookie Page Global ---");
+  try {
+    await payload.updateGlobal({
+      slug: "cookie-page",
+      data: cookiePageData as never,
+    });
+    console.log(
+      "Cookie Page global updated with cookieTypes, thirdPartyServices, and browserLinks",
+    );
+  } catch (error) {
+    console.error("Error updating cookie-page:", error);
   }
 
   // Create admin user if not exists

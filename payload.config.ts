@@ -22,6 +22,10 @@ import { AziendaPage } from "./src/globals/AziendaPage";
 import { ContattiPage } from "./src/globals/ContattiPage";
 import { ProntoInterventoPage } from "./src/globals/ProntoInterventoPage";
 
+// Globals - Pagine Legali
+import { PrivacyPage } from "./src/globals/PrivacyPage";
+import { CookiePage } from "./src/globals/CookiePage";
+
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
@@ -77,6 +81,9 @@ export default buildConfig({
     AziendaPage,
     ContattiPage,
     ProntoInterventoPage,
+    // Pagine Legali
+    PrivacyPage,
+    CookiePage,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "default-secret-change-in-production",

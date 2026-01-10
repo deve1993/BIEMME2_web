@@ -1,23 +1,45 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import type { Metadata } from "next";
+import { getPrivacyPageData } from "@/lib/data";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | BIEMME 2 Costruzioni",
-  description:
-    "Informativa sulla privacy di BIEMME 2 S.r.l. ai sensi del GDPR (Regolamento UE 2016/679).",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { page } = await getPrivacyPageData();
+  return {
+    title: page.seo?.title ?? "Privacy Policy | BIEMME 2 Costruzioni",
+    description:
+      page.seo?.description ??
+      "Informativa sulla privacy di BIEMME 2 S.r.l. ai sensi del GDPR (Regolamento UE 2016/679).",
+  };
+}
 
-// Company data
-const company = {
-  name: "BIEMME 2 S.r.l.",
-  address: "Via Agliardi Cavaliere Quarto, 18 - 24050 Morengo (BG)",
-  piva: "01998580164",
-  email: "info@biemme2.com",
-  phone: "+39 0363 958310",
-};
+export default async function PrivacyPage() {
+  const { page } = await getPrivacyPageData();
 
-export default function PrivacyPage() {
+  // Company data from CMS or fallback
+  const company = {
+    name: page.companyInfo?.name ?? "BIEMME 2 S.r.l.",
+    address:
+      page.companyInfo?.address ??
+      "Via Agliardi Cavaliere Quarto, 18 - 24050 Morengo (BG)",
+    piva: page.companyInfo?.vatNumber ?? "01998580164",
+    email: page.companyInfo?.email ?? "info@biemme2.com",
+    phone: page.companyInfo?.phone ?? "+39 0363 958310",
+  };
+
+  // Header data from CMS
+  const headerBadge = page.header?.badge ?? "Informativa Legale";
+  const headerTitle = page.header?.title ?? "Privacy Policy";
+  const headerSubtitle =
+    page.header?.subtitle ??
+    "Informativa sul trattamento dei dati personali ai sensi del Regolamento UE 2016/679 (GDPR)";
+  const lastUpdate = page.header?.lastUpdate
+    ? new Date(page.header.lastUpdate).toLocaleDateString("it-IT", {
+        month: "long",
+        year: "numeric",
+      })
+    : "Dicembre 2024";
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -27,17 +49,16 @@ export default function PrivacyPage() {
           {/* Header */}
           <div className="mb-12 border-b border-border pb-8">
             <span className="text-sm font-light uppercase tracking-widest text-primary">
-              Informativa Legale
+              {headerBadge}
             </span>
             <h1 className="mt-2 text-4xl font-light uppercase tracking-tight text-text-primary md:text-5xl">
-              Privacy Policy
+              {headerTitle}
             </h1>
             <p className="mt-4 font-light text-text-secondary">
-              Informativa sul trattamento dei dati personali ai sensi del
-              Regolamento UE 2016/679 (GDPR)
+              {headerSubtitle}
             </p>
             <p className="mt-2 text-sm text-text-muted">
-              Ultimo aggiornamento: Dicembre 2024
+              Ultimo aggiornamento: {lastUpdate}
             </p>
           </div>
 
