@@ -1,0 +1,40 @@
+# ===== PROJECTS (each has its own .git) =====
+projects/*/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ===== IDE =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ===== Temp & Generated =====
+nul
+tmp*
+*.tmp
+*.log
+
+# ===== Node (if accidentally created here) =====
+node_modules/
+.next/
+out/
+build/
+
+# ===== Environment =====
+.env
+.env.*
+!.env.example
+
+# ===== OpenCode runtime (keep agent/, skill/, command/ tracked) =====
+.opencode/node_modules/
+.opencode/bun.lock
+.opencode/package.json
+.opencode/package-lock.json
+
+# ===== Claude runtime =====
+.Claude/settings.local.json
